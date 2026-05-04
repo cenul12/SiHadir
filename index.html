@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2563eb">
+    <title>SiHadir Pro</title>
+
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22SiHadir%20Pro%22%2C%22short_name%22%3A%22SiHadir%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F6144%2F6144574.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    
+    <!-- Ikon Aplikasi untuk iOS -->
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/6144/6144574.png">
+
+    <!-- CSS Libraries -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <style>
+        :root { --primary: #2563eb; --secondary: #1e40af; --bg-light: #f8fafc; --sidebar-width: 260px; }
+        body { background-color: var(--bg-light); font-family: 'Segoe UI', system-ui, sans-serif; overflow-x: hidden; min-height: 100vh; margin: 0; padding: 0; -webkit-user-select: none; user-select: none; }
+        
+        /* Glass Card Style */
+        .glass-card { background: #ffffff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 8px 30px rgba(0,0,0,0.04); transition: all 0.3s ease; height: 100%; }
+        .glass-card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+        
+        /* Header Gradient */
+        .app-header { background: linear-gradient(135deg, var(--primary), var(--secondary)); padding: 2rem 1.5rem 6rem; color: white; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; position: relative; z-index: 10; }
+        .main-content { margin-top: -4.5rem; position: relative; z-index: 20; padding-bottom: 100px; }
+        
+        /* Radar GPS */
+        .gps-ring { position: relative; width: 140px; height: 140px; margin: 0 auto; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #f1f5f9; transition: all 0.5s; border: 6px solid white; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .gps-ring.searching { animation: pulse-blue 2s infinite; }
+        .gps-ring.inside { background: #ecfdf5; color: #10b981; border-color: #10b981; }
+        .gps-ring.outside { background: #fef2f2; color: #ef4444; border-color: #ef4444; }
+        
+        @keyframes pulse-blue { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
+        
+        /* Tab Management */
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Buttons */
+        .btn-action { border-radius: 18px; padding: 1.2rem; font-weight: 800; font-size: 1.1rem; transition: all 0.2s; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .btn-action:active:not(:disabled) { transform: scale(0.95); }
+        .btn-masuk { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .btn-pulang { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+        .btn-masuk:disabled, .btn-pulang:disabled { background: #e2e8f0 !important; color: #94a3b8 !important; box-shadow: none; }
+        
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-top: 1px solid #e2e8f0; display: none; z-index: 1000; padding: 10px 0; }
+        .bottom-nav.visible { display: flex; justify-content: space-around; }
+        .nav-link-custom { color: #94a3b8; text-decoration: none; font-size: 0.75rem; font-weight: 600; display: flex; flex-direction: column; align-items: center; transition: 0.2s; }
+        .nav-link-custom i { font-size: 1.3rem; margin-bottom: 4px; }
+        .nav-link-custom.active { color: var(--primary); }
+
+        /* Photo Styles */
+        .photo-circle { width: 110px; height: 110px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f1f5f9; border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .photo-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .dash-photo { width: 60px; height: 60px; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.5); }
+        .dash-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Admin Sidebar */
+        .admin-wrapper { display: flex; min-height: 100vh; }
+        .admin-sidebar { width: var(--sidebar-width); background: white; border-right: 1px solid #e2e8f0; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; }
+        .admin-main { flex: 1; padding: 2.5rem; background: #f8fafc; }
+        .sidebar-link { padding: 1rem 1.5rem; color: #64748b; text-decoration: none; display: flex; align-items: center; font-weight: 600; border-left: 4px solid transparent; }
+        .sidebar-link:hover { background: #f1f5f9; color: var(--primary); }
+        .sidebar-link.active { background: #eff6ff; color: var(--primary); border-left-color: var(--primary); }
+        
+        /* Utility */
+        .cursor-pointer { cursor: pointer; }
+        .max-container { max-width: 1000px; margin-left: auto; margin-right: auto; }
+
+        @media (min-width: 768px) {
+            .app-header { padding: 2.5rem 2rem 7rem; }
+            .main-content { margin-top: -4.5rem; }
+        }
+
+         /* Input pada PWA agar bisa di-select */
+        input, textarea, select { -webkit-user-select: auto !important; user-select: auto !important; }
+
+        /* Banner Install PWA Kustom */
+        #installBanner { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 9999; display: none; padding: 15px; align-items: center; justify-content: space-between; border: 1px solid #e2e8f0; }
+        #installBanner.show { display: flex; animation: slideUpBanner 0.5s ease-out; }
+        @keyframes slideUpBanner { from { bottom: 0; opacity: 0; } to { bottom: 80px; opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <!-- Banner Install PWA Kustom -->
+    <div id="installBanner">
+        <div class="d-flex align-items-center">
+            <img src="https://cdn-icons-png.flaticon.com/512/6144/6144574.png" width="40" height="40" class="me-3" alt="icon">
+            <div>
+                <h6 class="mb-0 fw-bold small">Pasang Aplikasi SiHadir</h6>
+                <p class="mb-0 text-muted" style="font-size: 0.7rem;">Akses lebih cepat dari layar utama.</p>
+            </div>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-sm btn-light border" onclick="closeInstallBanner()"><i class="fas fa-times"></i></button>
+            <button class="btn btn-sm btn-primary fw-bold" id="btnInstallPwa" onclick="triggerNativeInstall()">Pasang</button>
+        </div>
+    </div>
+
+    <!-- Global Loader -->
+    <div id="loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.95); z-index:9999; justify-content:center; align-items:center; flex-direction:column;">
+        <div class="spinner-grow text-primary" role="status"></div>
+        <h6 class="mt-3 fw-bold text-primary" id="loaderText">Sinkronisasi...</h6>
+    </div>
+
+    <!-- VIEW: LOGIN -->
+    <div id="viewLogin" class="view-section active">
+        <div class="app-header text-center">
+            <h4 class="mb-0 fw-bold"><i class="fas fa-fingerprint me-2"></i>SiHadir Pro</h4>
+            <p class="mb-0 mt-1 text-white-50 small">Presensi Kampus Berbasis Lokasi</p>
+        </div>
+        <div class="container main-content">
+            <div class="glass-card p-4 text-center mx-auto shadow-lg" style="max-width: 400px; height: auto;">
+              <!-- Notifikasi PWA Langsung di Login -->
+                <div id="pwaLoginAlert" class="alert alert-primary bg-primary bg-opacity-10 border-0 shadow-sm rounded-4 mb-4 text-start d-none align-items-center justify-content-between p-3">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-mobile-alt fa-2x text-primary me-3"></i>
+                        <div>
+                            <strong class="d-block small text-primary">Instal Aplikasi</strong>
+                            <span style="font-size: 0.75rem;" class="text-primary opacity-75">Buka langsung dari layar beranda</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-sm btn-primary rounded-pill fw-bold shadow-sm" onclick="triggerNativeInstall()">Pasang</button>
+                </div>
+                <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex p-3 mb-3">
+                    <i class="fas fa-shield-alt fa-2x"></i>
+                </div>
+                <h4 class="fw-bold text-dark mb-1">Portal Autentikasi</h4>
+                <p class="text-muted small mb-4">Silakan masuk menggunakan NIP Anda.</p>
+                
+                <form id="loginForm">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control border-0 bg-light rounded-4" id="inputNip" placeholder="Username" required>
+                        <label class="text-muted">Username (NIP)</label>
+                    </div>
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control border-0 bg-light rounded-4" id="inputPass" placeholder="Password" required>
+                        <label class="text-muted">Password</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 btn-action shadow-lg">MASUK SISTEM <i class="fas fa-sign-in-alt ms-2"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW: USER DASHBOARD -->
+    <div id="viewUser" class="view-section">
+        <div class="app-header">
+            <div class="max-container">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-fingerprint me-2"></i>SiHadir Pro</h5>
+                    <div id="dashPhoto" class="dash-photo">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                </div>
+                
+                <div class="row align-items-center">
+                    <div class="col-md-7">
+                        <p class="mb-0 opacity-75 small fw-semibold">Selamat Datang,</p>
+                        <h1 class="fw-bold mb-1" id="userDashboardName">Memuat...</h1>
+                        <div class="d-inline-flex align-items-center mt-1 py-1 px-3 bg-white bg-opacity-10 rounded-pill">
+                            <i class="fas fa-university me-2 small"></i>
+                            <span id="userDashboardProdi" class="small fw-bold">Program Studi</span>
+                        </div>
+                    </div>
+                    <div class="col-md-5 mt-4 mt-md-0">
+                        <div class="bg-white bg-opacity-10 p-3 rounded-4 border border-white border-opacity-10">
+                            <h6 class="small fw-bold mb-2" id="schedTitleLabel"><i class="fas fa-calendar-alt me-2"></i>JADWAL HARI INI</h6>
+                            <div class="d-flex justify-content-between small opacity-90">
+                                <span>Batas Masuk:</span>
+                                <span class="fw-bold" id="schedIn">07.30 WITA</span>
+                            </div>
+                            <div class="d-flex justify-content-between small opacity-90">
+                                <span>Jam Pulang:</span>
+                                <span class="fw-bold" id="schedOut">--.--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid main-content px-3">
+            <div class="max-container">
+                <!-- Alert Keamanan Akun (Sandi Bawaan) -->
+                <div id="alertChangePass" class="alert alert-warning border-0 shadow-sm rounded-4 mb-4 d-none">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-key me-3 fa-lg"></i>
+                        <div>
+                            <small class="fw-bold d-block">Keamanan Akun</small>
+                            <small>Sandi Anda masih bawaan. Mohon ubah di menu profil untuk mengaktifkan tombol presensi.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 justify-content-center">
+                    <!-- Kartu Jam -->
+                    <div class="col-12 col-lg-5">
+                        <div class="glass-card p-4 p-md-5 text-center d-flex flex-column justify-content-center">
+                            <div class="text-primary fw-bold small mb-2" id="uDate">Hari, Tanggal</div>
+                            <h1 class="display-2 fw-bolder text-dark mb-0 tracking-tight" id="uTime">00:00</h1>
+                            <div class="mt-3 py-2 px-3 bg-light rounded-pill d-inline-block mx-auto">
+                                <small class="text-muted fw-bold"><i class="far fa-clock me-1"></i> Waktu WITA</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kartu Geofencing -->
+                    <div class="col-12 col-lg-7">
+                        <div class="glass-card p-4 p-md-5 text-center">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <span class="small fw-bold text-muted"><i class="fas fa-broadcast-tower me-1 text-primary"></i> STATUS GEOFENCING</span>
+                                <button class="btn btn-sm btn-light rounded-circle shadow-sm" onclick="initGeofence()"><i class="fas fa-sync-alt text-primary"></i></button>
+                            </div>
+                            
+                            <div class="row align-items-center">
+                                <div class="col-md-5 mb-4 mb-md-0">
+                                    <div class="gps-ring searching" id="gpsRing">
+                                        <i class="fas fa-map-marker-alt fa-3x"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-7 text-md-start">
+                                    <h3 class="fw-bold mb-1" id="geoStatusText">Mencari Sinyal...</h3>
+                                    <p class="text-muted small mb-3" id="geoDistanceText">Menghitung jarak ke kampus...</p>
+                                    
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button class="btn btn-masuk btn-action w-100" id="btnMasuk" disabled>
+                                                <i class="fas fa-sign-in-alt d-block mb-1"></i> MASUK
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button class="btn btn-pulang btn-action w-100" id="btnPulang" disabled>
+                                                <i class="fas fa-sign-out-alt d-block mb-1"></i> PULANG
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p id="attendanceStatusLabel" class="text-center text-md-start mt-3 small fw-bold text-muted mb-0"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW: REKAP PRIBADI -->
+    <div id="viewUserRekap" class="view-section">
+        <div class="app-header">
+            <div class="max-container px-2">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0 fw-bold">Riwayat Presensi</h4>
+                    <div class="d-flex gap-1">
+                        <select id="userRekapMonth" class="form-select form-select-sm border-0 shadow-sm rounded-pill px-3" style="width: 110px;"></select>
+                        <select id="userRekapYear" class="form-select form-select-sm border-0 shadow-sm rounded-pill px-3" style="width: 85px;"></select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid main-content px-3">
+            <div class="max-container">
+                <div class="glass-card p-0 overflow-hidden border-0">
+                    <div class="table-responsive">
+                        <table id="userLogsTable" class="table table-hover mb-0 align-middle text-center">
+                            <thead class="table-light text-muted small fw-bold">
+                                <tr><th>TANGGAL</th><th>MASUK</th><th>PULANG</th><th>KETERANGAN</th></tr>
+                            </thead>
+                            <tbody class="small fw-semibold"></tbody>
+                        </table>
+                    </div>
+                    <div id="userRekapEmpty" class="text-center py-5 d-none">
+                        <i class="fas fa-calendar-times fa-3x text-light mb-3"></i>
+                        <p class="text-muted small">Tidak ada riwayat presensi di bulan ini.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW: PROFILE -->
+    <div id="viewProfile" class="view-section">
+        <div class="app-header">
+            <div class="max-container px-2">
+                <div class="d-flex align-items-center mb-3">
+                    <i id="profileBackBtn" class="fas fa-arrow-left me-3 cursor-pointer fa-lg" onclick="routeView('User')"></i>
+                    <h4 class="mb-0 fw-bold">Pengaturan Profil</h4>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid main-content px-3">
+            <div class="max-container">
+                <div class="row g-4 justify-content-center">
+                    <!-- Sisi Kiri: Foto & Info -->
+                    <div class="col-12 col-md-5">
+                        <div class="glass-card p-4 text-center">
+                            <div class="position-relative d-inline-block mb-3">
+                                <div id="profilePhotoCircle" class="photo-circle mx-auto">
+                                    <i class="fas fa-user fa-3x text-slate-300"></i>
+                                </div>
+                                <div class="position-absolute bottom-0 end-0 bg-white rounded-circle shadow p-2 cursor-pointer border" onclick="$('#photoInput').click()">
+                                    <i class="fas fa-camera text-primary small"></i>
+                                </div>
+                                <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
+                            </div>
+                            <h4 class="fw-bold mb-0 text-dark" id="profileName">-</h4>
+                            <p class="text-muted small mb-3 fw-semibold" id="profileNip">NIP: -</p>
+                            <div class="d-flex flex-wrap justify-content-center gap-2 mb-2">
+                                <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 border border-primary border-opacity-10" id="profileRole">-</span>
+                                <span class="badge bg-light text-dark rounded-pill px-3 py-2 border" id="userDashboardProdiDetail">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sisi Kanan: Form Ganti Sandi (Tampilan Sebelumnya) -->
+                    <div class="col-12 col-md-7">
+                        <div class="glass-card p-4">
+                            <div class="bg-light p-3 rounded-4 border border-white">
+                                <h6 class="fw-bold small text-primary mb-3 d-flex align-items-center">
+                                    <div class="bg-primary bg-opacity-10 p-2 rounded-3 me-2">
+                                        <i class="fas fa-lock small"></i>
+                                    </div>
+                                    GANTI KATA SANDI
+                                </h6>
+                                <!-- Note Peringatan Sandi Default -->
+                                <div id="forcePassChangeNote" class="alert alert-danger border-0 small py-2 d-none">
+                                    <i class="fas fa-exclamation-triangle me-2"></i> <strong>KEAMANAN:</strong> Harap ganti kata sandi default Anda untuk mengaktifkan fitur presensi.
+                                </div>
+                                <form id="formChangePass">
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-12 col-sm-6">
+                                            <label class="form-label small fw-bold text-muted mb-1">Sandi Baru</label>
+                                            <input type="password" id="confirmInputNewPass" class="form-control border-0 shadow-sm rounded-3 bg-white" placeholder="Min. 6 karakter" required>
+                                        </div>
+                                        <div class="col-12 col-sm-6">
+                                            <label class="form-label small fw-bold text-muted mb-1">Konfirmasi</label>
+                                            <input type="password" id="confirmPass" class="form-control border-0 shadow-sm rounded-3 bg-white" placeholder="Ulangi sandi" required>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 rounded-3 fw-bold py-2 shadow-sm text-sm">SIMPAN PERUBAHAN</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column align-items-center justify-content-center mt-5">
+                    <button class="btn btn-outline-danger rounded-pill fw-bold py-2 px-5 shadow-sm border-2 transition-all" onclick="logout()">
+                        <i class="fas fa-power-off me-2"></i> KELUAR DARI SISTEM
+                    </button>
+                    <p class="text-muted mt-3 small opacity-50 fw-semibold">SiHadir Pro v1.3</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW: ADMIN -->
+    <div id="viewAdmin" class="view-section">
+        <div class="admin-wrapper">
+            <aside class="admin-sidebar">
+                <div class="p-4 border-bottom">
+                    <h5 class="fw-bold text-primary mb-0"><i class="fas fa-fingerprint me-2"></i>SiHadir Admin</h5>
+                </div>
+                <nav class="mt-3 flex-grow-1">
+                    <a href="javascript:void(0)" class="sidebar-link active" onclick="switchAdminSubView('dash', this)"><i class="fas fa-tachometer-alt me-3"></i> Dashboard</a>
+                    <a href="javascript:void(0)" class="sidebar-link" onclick="switchAdminSubView('rekap', this)"><i class="fas fa-calendar-check me-3"></i> Rekap Presensi</a>
+                    <a href="javascript:void(0)" class="sidebar-link" onclick="switchAdminSubView('setting', this)"><i class="fas fa-map-marked-alt me-3"></i> Pengaturan</a>
+                </nav>
+                <div class="p-4 border-top">
+                    <button class="btn btn-outline-danger w-100 rounded-3 fw-bold" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i> Keluar</button>
+                </div>
+            </aside>
+            <main class="admin-main">
+                <div id="subViewDash" class="admin-sub-view">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold mb-0 text-dark">Ringkasan Bulan Ini</h3>
+                        <div class="d-flex gap-2">
+                            <select id="dashMonth" class="form-select border-0 shadow-sm rounded-3"></select>
+                            <select id="dashYear" class="form-select border-0 shadow-sm rounded-3"></select>
+                        </div>
+                    </div>
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-4"><div class="glass-card p-4 text-white" style="background: linear-gradient(135deg, #3b82f6, #1e40af);"><small class="fw-bold opacity-75">Hadir (Dosen)</small><h2 class="fw-bold mb-0" id="statCountDosen">0</h2><i class="fas fa-user-tie float-end opacity-25" style="margin-top: -30px; font-size: 2.5rem;"></i></div></div>
+                        <div class="col-md-4"><div class="glass-card p-4 text-white" style="background: linear-gradient(135deg, #10b981, #065f46);"><small class="fw-bold opacity-75">Hadir (Tendik)</small><h2 class="fw-bold mb-0" id="statCountTendik">0</h2><i class="fas fa-user-clock float-end opacity-25" style="margin-top: -30px; font-size: 2.5rem;"></i></div></div>
+                        <div class="col-md-4"><div class="glass-card p-4 text-white" style="background: linear-gradient(135deg, #f59e0b, #9a3412);"><small class="fw-bold opacity-75">Hadir (Lainnya)</small><h2 class="fw-bold mb-0" id="statCountKaryawan">0</h2><i class="fas fa-users float-end opacity-25" style="margin-top: -30px; font-size: 2.5rem;"></i></div></div>
+                    </div>
+                    <div class="glass-card p-4">
+                        <h6 class="fw-bold mb-4 text-primary"><i class="fas fa-list-ol me-2"></i>Peringkat Kehadiran Bulanan</h6>
+                        <table id="statsTable" class="table table-hover w-100 align-middle"><thead class="table-light small fw-bold"><tr><th>NAMA PEGAWAI</th><th>ROLE</th><th>PRODI</th><th class="text-center">HADIR NORMAL</th><th class="text-center">HADIR LEMBUR</th></tr></thead><tbody id="statsTableBody"></tbody></table>
+                    </div>
+                </div>
+                <div id="subViewRekap" class="admin-sub-view d-none">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold mb-0">Riwayat Presensi Pegawai</h3>
+                        <div class="d-flex gap-2">
+                            <select id="rekapMonth" class="form-select border-0 shadow-sm rounded-3"></select>
+                            <select id="rekapYear" class="form-select border-0 shadow-sm rounded-3"></select>
+                            <button class="btn btn-success rounded-3 px-4 shadow-sm fw-bold" onclick="exportToExcel()"><i class="fas fa-file-excel me-2"></i>EXPORT</button>
+                        </div>
+                    </div>
+                    <div class="glass-card p-4">
+                        <div class="table-responsive">
+                            <table id="adminTable" class="table table-hover w-100 text-center align-middle">
+                                <thead class="table-light text-muted small fw-bold">
+                                    <tr><th>TANGGAL</th><th>NIP</th><th>NAMA</th><th>PRODI</th><th>MASUK</th><th>PULANG</th><th>KET</th><th>GPS</th></tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="subViewSetting" class="admin-sub-view d-none">
+                    <h3 class="fw-bold mb-4">Konfigurasi Geofencing</h3>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="glass-card p-4">
+                                <div class="mb-3"><label class="small fw-bold text-muted">Latitude</label><input type="text" id="cfgLat" class="form-control rounded-3 py-2 bg-light border-0"></div>
+                                <div class="mb-3"><label class="small fw-bold text-muted">Longitude</label><input type="text" id="cfgLng" class="form-control rounded-3 py-2 bg-light border-0"></div>
+                                <div class="mb-4"><label class="small fw-bold text-muted">Radius (Meter)</label><input type="number" id="cfgRad" class="form-control rounded-3 py-2 bg-light border-0"></div>
+                                <button class="btn btn-primary w-100 rounded-3 fw-bold py-3 shadow" onclick="saveConfig()">UPDATE TITIK KAMPUS</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav id="bottomNav" class="bottom-nav shadow-lg">
+        <a href="javascript:void(0)" class="nav-link-custom active" onclick="routeView('User', this)"><i class="fas fa-home"></i> <span>Beranda</span></a>
+        <a href="javascript:void(0)" class="nav-link-custom" onclick="routeView('Rekap', this)"><i class="fas fa-calendar-check"></i> <span>Riwayat</span></a>
+        <a href="javascript:void(0)" class="nav-link-custom" onclick="routeView('Profile', this)"><i class="fas fa-user-circle"></i> <span>Profil</span></a>
+    </nav>
+
+    <!-- JS Libraries -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.3/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+
+    <script>
+
+        const GAS_URL = "ISI_DENGAN_URL_WEB_APP_ANDA_YANG_BARU";
+
+        let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -6.2, lng: 106.8, radius: 200 };
+        let currentUser = null;
+        let currentPos = null;
+        let gpsWatcher = null;
+        let dataTableInstance = null;
+        let statsTableInstance = null;
+        let allLogsGlobal = []; 
+        let deferredPrompt;
+
+        const TIMEZONE = 'Asia/Makassar'; 
+        const isGAS = typeof google !== 'undefined' && typeof google.script !== 'undefined';
+        const indonesianMonths = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+        // FUNGSI UTAMA UNTUK KOMUNIKASI DENGAN DATABASE GAS
+        async function fetchServer(action, payload) {
+            if (GAS_URL === "ISI_DENGAN_URL_WEB_APP_ANDA_YANG_BARU" || GAS_URL === "") {
+                throw new Error("URL Server belum diatur! Ganti baris 'const GAS_URL' di file index.html.");
+            }
+            
+            try {
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action, payload })
+                });
+                
+                const result = await response.json();
+                if (!result.success) throw new Error(result.error || "Terjadi kesalahan pada server");
+                return result.data;
+            } catch (err) {
+                console.error("Fetch Error:", err);
+                throw new Error("Gagal terhubung ke server database.");
+            }
+        }
+
+        $(document).ready(() => {
+            initFilters();
+            setInterval(updateClock, 1000);
+            updateClock();
+            setInterval(checkSessionExpiry, 60000);
+            initPWA();
+
+            $('#loginForm').on('submit', function(e) { e.preventDefault(); handleLogin(); });
+            $('#formChangePass').on('submit', function(e) { e.preventDefault(); handleChangePassword(); });
+            $('#btnMasuk').on('click', () => doAbsen('Masuk'));
+            $('#btnPulang').on('click', () => doAbsen('Pulang'));
+            
+            $('#dashMonth, #dashYear, #rekapMonth, #rekapYear, #userRekapMonth, #userRekapYear').on('change', () => {
+                if (allLogsGlobal.length > 0) { renderAdminViews(allLogsGlobal); renderUserRekap(allLogsGlobal); }
+            });
+
+            const session = sessionStorage.getItem('active_user');
+            if (session) {
+                try {
+                    currentUser = JSON.parse(session);
+                    const loginTime = sessionStorage.getItem('login_timestamp');
+                    if (loginTime && (Date.now() - parseInt(loginTime) > 3600000)) { logout(true); return; }
+                    
+                    const isDefault = currentUser.role !== 'Admin' && String(currentUser.password || "").trim() === String(currentUser.nip || "").trim();
+                    if (currentUser.role === 'Admin') routeView('Admin');
+                    else if (isDefault) routeView('Profile');
+                    else routeView('User');
+                } catch(e) { sessionStorage.removeItem('active_user'); }
+            }
+        });
+
+       // ================= LOGIKA PWA (INSTALL APLIKASI NATIVE) =================
+        function initPWA() {
+            // Mencegat event instalasi native bawaan browser
+            window.addEventListener('beforeinstallprompt', (e) => {
+                // Mencegah prompt mini-infobar muncul secara otomatis
+                e.preventDefault();
+                // Simpan event sehingga bisa kita panggil ketika tombol diklik
+                deferredPrompt = e;
+                console.log("Install prompt tertangkap oleh browser.");
+            });
+
+            try {
+                // Cek apakah aplikasi sudah berjalan dalam mode fullscreen (sudah diinstal)
+                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+                const bannerClosed = localStorage.getItem('pwa_banner_closed');
+
+                if (!isStandalone) {
+                    // Tampilkan kotak peringatan di halaman Login
+                    $('#pwaLoginAlert').removeClass('d-none').addClass('d-flex');
+                    
+                    // Tampilkan banner melayang di bawah (jika belum disilang)
+                    if (!bannerClosed) {
+                        setTimeout(() => {
+                            document.getElementById('installBanner').classList.add('show');
+                        }, 1500);
+                    }
+                }
+            } catch (e) {
+                console.warn('PWA init error:', e);
+                $('#pwaLoginAlert').removeClass('d-none').addClass('d-flex');
+            }
+        }
+
+        async function triggerNativeInstall() {
+            // Jika browser berhasil menangkap fungsi prompt native (Chrome/Edge Android)
+            if (deferredPrompt) {
+                closeInstallBanner();
+                // Munculkan dialog bawaan dari sistem browser (seperti logo di address bar / bottom sheet bawaan HP)
+                deferredPrompt.prompt();
+                
+                // Menunggu respons apakah user menekan Install atau Cancel
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`Respons user terhadap instalasi: ${outcome}`);
+                
+                // Reset setelah dipakai
+                deferredPrompt = null;
+            } else {
+                // Jika browser memblokir fungsi tersebut karena faktor Iframe Google Apps Script atau Safari iOS
+                // Munculkan panduan manual sebagai cadangan
+                showInstallGuide();
+            }
+        }
+
+        function closeInstallBanner() {
+            document.getElementById('installBanner').classList.remove('show');
+            localStorage.setItem('pwa_banner_closed', 'true');
+        }
+
+        function showInstallGuide() {
+            closeInstallBanner();
+            // Panduan Instalasi Manual (Fallback)
+            Swal.fire({
+                title: 'Cara Pasang Aplikasi',
+                html: `
+                    <div class="text-start" style="font-size: 0.9rem;">
+                        <p>Untuk memunculkan logo aplikasi di layar utama HP Anda:</p>
+                        <ol class="mb-0 ps-3 text-muted">
+                            <li class="mb-2">Ketuk ikon <b>Menu (titik tiga ⋮ atau ikon bagikan)</b> di browser Anda.</li>
+                            <li class="mb-2">Pilih menu <b>"Tambahkan ke Layar Utama"</b> (Add to Home screen).</li>
+                            <li>Ketuk tombol <b>"Tambahkan"</b> atau <b>"Add"</b>.</li>
+                        </ol>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'Saya Mengerti',
+                confirmButtonColor: '#2563eb'
+            });
+        }
+        // =================================================================
+
+
+        function initFilters() {
+            const now = new Date();
+            const dashM = $('#dashMonth'), dashY = $('#dashYear'), rekapM = $('#rekapMonth'), rekapY = $('#rekapYear'), userM = $('#userRekapMonth'), userY = $('#userRekapYear');
+            indonesianMonths.forEach((m, i) => {
+                const opt = `<option value="${i+1}" ${i === now.getMonth() ? 'selected' : ''}>${m}</option>`;
+                dashM.append(opt); rekapM.append(opt); userM.append(opt);
+            });
+            for(let y = now.getFullYear(); y >= now.getFullYear() - 5; y--) {
+                const opt = `<option value="${y}" ${y === now.getFullYear() ? 'selected' : ''}>${y}</option>`;
+                dashY.append(opt); rekapY.append(opt); userY.append(opt);
+            }
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: TIMEZONE };
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: TIMEZONE };
+            $('#uTime').text(now.toLocaleTimeString('id-ID', timeOptions));
+            $('#uDate').text(now.toLocaleDateString('id-ID', dateOptions));
+            
+            if (currentUser && currentUser.role !== 'Admin') {
+                const witaNowStr = now.toLocaleString("en-US", {timeZone: TIMEZONE});
+                const day = new Date(witaNowStr).getDay(); 
+                let schedIn = "07.30 WITA", schedOut = "16.00 WITA";
+                let label = '<i class="fas fa-calendar-alt me-2"></i>JADWAL HARI INI';
+                if (day === 5) schedOut = "16.30 WITA";
+                else if (day === 0 || day === 6) { schedOut = "Sesuai Lembur"; label = '<i class="fas fa-tools me-2 text-warning"></i>JADWAL LEMBUR'; }
+                $('#schedTitleLabel').html(label); $('#schedIn').text(schedIn); $('#schedOut').text(schedOut);
+            }
+        }
+
+        function handlePhotoUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+            if (file.size > 1024 * 1024) return Swal.fire('Error', 'Maksimal 1MB', 'error');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64 = e.target.result;
+                showLoader('Mengunggah Foto...');
+                if (isGAS) {
+                    google.script.run.withSuccessHandler((res) => {
+                        hideLoader();
+                        if (res.success) {
+                            currentUser.photo = res.url;
+                            sessionStorage.setItem('active_user', JSON.stringify(currentUser));
+                            updatePhotoUI(res.url);
+                            Swal.fire('Berhasil', 'Foto profil diperbarui', 'success');
+                        } else Swal.fire('Gagal', res.message, 'error');
+                    }).apiUpdatePhoto(currentUser.nip, base64);
+                } else {
+                    setTimeout(() => { 
+                        hideLoader(); currentUser.photo = base64; 
+                        sessionStorage.setItem('active_user', JSON.stringify(currentUser));
+                        updatePhotoUI(base64); Swal.fire('Simulasi', 'Foto diperbarui', 'success');
+                    }, 1000);
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updatePhotoUI(url) {
+            const content = url ? `<img src="${url}">` : `<i class="fas fa-user fa-3x text-slate-300"></i>`;
+            $('#profilePhotoCircle').html(content);
+            $('#dashPhoto').html(url ? `<img src="${url}">` : `<i class="fas fa-user text-white"></i>`);
+        }
+
+        function handleLogin() {
+            const nip = $('#inputNip').val().trim(), pass = $('#inputPass').val().trim();
+            showLoader('Verifikasi Akun...');
+            if (isGAS) {
+                google.script.run.withSuccessHandler((user) => {
+                    hideLoader();
+                    if (user) {
+                        currentUser = user; currentUser.password = pass; 
+                        sessionStorage.setItem('active_user', JSON.stringify(currentUser));
+                        sessionStorage.setItem('login_timestamp', Date.now().toString());
+                        
+                        const isDefault = currentUser.role !== 'Admin' && String(currentUser.password).trim() === String(currentUser.nip).trim();
+                        if (isDefault) routeView('Profile');
+                        else routeView(user.role === 'Admin' ? 'Admin' : 'User');
+                    } else Swal.fire('Error', 'Username/password salah', 'error');
+                }).apiLogin(nip, pass);
+            } else {
+                setTimeout(() => {
+                    hideLoader();
+                    currentUser = { nip, nama: 'Husnul Ramdani', role: nip === 'admin' ? 'Admin' : 'Dosen', prodi: 'Tekonologi Pangan', password: pass, photo: null };
+                    sessionStorage.setItem('active_user', JSON.stringify(currentUser));
+                    sessionStorage.setItem('login_timestamp', Date.now().toString());
+                    
+                    const isDefault = currentUser.role !== 'Admin' && String(currentUser.password).trim() === String(currentUser.nip).trim();
+                    if (isDefault) routeView('Profile');
+                    else routeView(currentUser.role === 'Admin' ? 'Admin' : 'User');
+                }, 800);
+            }
+        }
+
+        function routeView(view, el) {
+            // Cek jika user harus ganti password
+            if (currentUser) {
+                const mustChange = currentUser.role !== 'Admin' && String(currentUser.password || "").trim() === String(currentUser.nip || "").trim();
+                
+                // Jika harus ganti sandi dan mencoba akses halaman lain, paksa ke Profile
+                if (mustChange && view !== 'Profile' && view !== 'Login') {
+                    view = 'Profile';
+                    el = null; // Reset el nav
+                }
+            }
+
+            // Sembunyikan semua section
+            $('.view-section').removeClass('active'); 
+            $('.nav-link-custom').removeClass('active');
+            
+            // Aktifkan nav link yang sesuai
+            if (el) $(el).addClass('active');
+            else {
+                if (view === 'User') $('.nav-link-custom:eq(0)').addClass('active');
+                if (view === 'Rekap') $('.nav-link-custom:eq(1)').addClass('active');
+                if (view === 'Profile') $('.nav-link-custom:eq(2)').addClass('active');
+            }
+
+            if (currentUser) {
+                const mustChange = currentUser.role !== 'Admin' && String(currentUser.password || "").trim() === String(currentUser.nip || "").trim();
+                
+                // Update data UI
+                $('#userDashboardName').text(currentUser.nama || '-'); 
+                $('#userDashboardProdi').text(currentUser.prodi || '-');
+                $('#profileName').text(currentUser.nama || '-'); 
+                $('#profileNip').text("NIP: " + (currentUser.nip || '-'));
+                $('#profileRole').text(currentUser.role || '-'); 
+                $('#userDashboardProdiDetail').text(currentUser.prodi || '-');
+                
+                // Panggil Update Foto
+                updatePhotoUI(currentUser.photo);
+
+                if (currentUser.role !== 'Admin') { 
+                    // Sembunyikan Bottom Nav sepenuhnya jika harus ganti sandi agar tidak bisa diklik
+                    if (mustChange) {
+                        $('#bottomNav').removeClass('visible');
+                        $('#alertChangePass').removeClass('d-none');
+                        $('#forcePassChangeNote').removeClass('d-none');
+                        $('#profileBackBtn').addClass('d-none');
+                    } else {
+                        $('#bottomNav').addClass('visible');
+                        $('#alertChangePass').addClass('d-none');
+                        $('#forcePassChangeNote').addClass('d-none');
+                        $('#profileBackBtn').removeClass('d-none');
+                    }
+                    loadDataForUser(); 
+                    initGeofence();
+                } else {
+                    $('#bottomNav').removeClass('visible');
+                }
+            }
+
+            // Tampilkan view yang dituju
+            if (view === 'Login') { 
+                $('#viewLogin').addClass('active'); 
+                $('#inputNip, #inputPass').val(''); 
+            } else if (view === 'User') {
+                $('#viewUser').addClass('active');
+            } else if (view === 'Rekap') {
+                $('#viewUserRekap').addClass('active');
+            } else if (view === 'Profile') {
+                $('#viewProfile').addClass('active');
+            } else if (view === 'Admin') {
+                $('#viewAdmin').addClass('active'); 
+                loadAdminData(); 
+            }
+        }
+
+        function isAttendanceOpen() {
+            const witaNow = new Date(new Date().toLocaleString("en-US", {timeZone: TIMEZONE}));
+            if ((witaNow.getHours() * 60 + witaNow.getMinutes()) < (7 * 60 + 30)) return { open: false, reason: "Presensi dibuka pukul 07.30 WITA" };
+            return { open: true };
+        }
+
+        function isWeekend(dateStr) {
+            if (!dateStr) return false;
+            const parts = dateStr.split('/');
+            const d = new Date(parts[2] + "-" + parts[1] + "-" + parts[0] + "T00:00:00+08:00");
+            return d.getDay() === 0 || d.getDay() === 6; 
+        }
+
+        function loadDataForUser() {
+            if (isGAS) google.script.run.withSuccessHandler((logs) => { allLogsGlobal = logs; renderUserRekap(logs); }).apiGetLogs();
+            else { allLogsGlobal = [{tanggal: '04/05/2026', nip: currentUser.nip, jamMasuk: '08:00', jamPulang: ''}]; renderUserRekap(allLogsGlobal); }
+        }
+
+        function renderUserRekap(logs) {
+            const tM = parseInt($('#userRekapMonth').val()), tY = parseInt($('#userRekapYear').val());
+            const tbody = $('#userLogsTable tbody').empty();
+            let count = 0;
+            logs.forEach(log => {
+                const p = log.tanggal.split('/');
+                if (log.nip === currentUser.nip && parseInt(p[1]) === tM && parseInt(p[2]) === tY) {
+                    count++;
+                    const ket = isWeekend(log.tanggal) ? '<span class="badge bg-warning text-dark">Lembur</span>' : '<span class="badge bg-info text-white">Hadir</span>';
+                    tbody.append(`<tr><td>${log.tanggal}</td><td>${log.jamMasuk || '-'}</td><td>${log.jamPulang || '-'}</td><td>${ket}</td></tr>`);
+                }
+            });
+            if (count === 0) { $('#userLogsTable').addClass('d-none'); $('#userRekapEmpty').removeClass('d-none'); }
+            else { $('#userLogsTable').removeClass('d-none'); $('#userRekapEmpty').addClass('d-none'); }
+        }
+
+        function logout(isAuto = false) { 
+            const perform = () => { sessionStorage.removeItem('active_user'); sessionStorage.removeItem('login_timestamp'); if (gpsWatcher) navigator.geolocation.clearWatch(gpsWatcher); routeView('Login'); };
+            if (isAuto) { perform(); Swal.fire('Sesi Habis', 'Silakan login kembali', 'info'); return; }
+            Swal.fire({ title: 'Keluar?', icon: 'warning', showCancelButton: true }).then(r => { if(r.isConfirmed) perform(); });
+        }
+
+        function checkSessionExpiry() {
+            const t = sessionStorage.getItem('login_timestamp');
+            if (t && currentUser && (Date.now() - parseInt(t) > 3600000)) logout(true);
+        }
+
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3;
+            const dLat = (lat2-lat1) * Math.PI/180, dLon = (lon2-lon1) * Math.PI/180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+            return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+        }
+
+        function initGeofence() {
+            if (!navigator.geolocation) return;
+            const mustChange = currentUser && currentUser.role !== 'Admin' && String(currentUser.password || "").trim() === String(currentUser.nip || "").trim();
+            
+            if (gpsWatcher) navigator.geolocation.clearWatch(gpsWatcher);
+            
+            gpsWatcher = navigator.geolocation.watchPosition(pos => {
+                currentPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                const dist = getDistance(currentPos.lat, currentPos.lng, campusConfig.lat, campusConfig.lng);
+                const inside = dist <= campusConfig.radius;
+                const time = isAttendanceOpen();
+                const witaNow = new Date(new Date().toLocaleString("en-US", {timeZone: TIMEZONE}));
+                const isWeekendDay = witaNow.getDay() === 0 || witaNow.getDay() === 6;
+                const contextSuffix = isWeekendDay ? " (Lembur)" : "";
+
+                $('#gpsRing').removeClass('searching inside outside').addClass(inside ? 'inside' : 'outside');
+                $('#geoStatusText').text(inside ? 'Di Area Kampus' : 'Luar Kampus');
+                $('#geoDistanceText').html(`Jarak Anda: <strong>${dist} m</strong> (Maks: ${campusConfig.radius} m)`);
+                
+                $('#btnMasuk').prop('disabled', !inside || mustChange || currentUser.hasMasuk || !time.open);
+                $('#btnPulang').prop('disabled', !inside || mustChange || !currentUser.hasMasuk || currentUser.hasPulang);
+
+                let label = "";
+                if (!time.open && !currentUser.hasMasuk) label = time.reason;
+                else if (!currentUser.hasMasuk) label = `Anda belum presensi hari ini${contextSuffix}`;
+                else if (!currentUser.hasPulang) label = `Anda sudah presensi masuk hari ini${contextSuffix}`;
+                else label = `Anda sudah presensi hari ini${contextSuffix}`;
+                
+                $('#attendanceStatusLabel').text(label).removeClass('text-danger text-success text-primary text-muted');
+                if (!time.open && !currentUser.hasMasuk) $('#attendanceStatusLabel').addClass('text-danger');
+                else if (!currentUser.hasMasuk) $('#attendanceStatusLabel').addClass('text-muted');
+                else if (!currentUser.hasPulang) $('#attendanceStatusLabel').addClass('text-success');
+                else $('#attendanceStatusLabel').addClass('text-primary');
+
+                // Update Ikon Tombol secara dinamis
+                $('#btnMasuk').html(currentUser.hasMasuk ? 
+                    '<i class="fas fa-check-circle d-block mb-1"></i> MASUK' : 
+                    '<i class="fas fa-sign-in-alt d-block mb-1"></i> MASUK');
+                
+                $('#btnPulang').html(currentUser.hasPulang ? 
+                    '<i class="fas fa-check-circle d-block mb-1"></i> PULANG' : 
+                    '<i class="fas fa-sign-out-alt d-block mb-1"></i> PULANG');
+
+            }, null, { enableHighAccuracy: true });
+        }
+
+        function doAbsen(type) {
+            Swal.fire({ title: `Absen ${type}?`, icon: 'question', showCancelButton: true }).then(r => {
+                if (r.isConfirmed) {
+                    showLoader(`Kirim ${type}...`);
+                    const tWita = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: TIMEZONE }).replace(/\./g, ':');
+                    const p = { nip: currentUser.nip, nama: currentUser.nama, prodi: currentUser.prodi, role: currentUser.role, aksi: type, lat: currentPos.lat, lng: currentPos.lng, jamWita: tWita, device: navigator.userAgent };
+                    if (isGAS) {
+                        google.script.run.withSuccessHandler(() => {
+                            hideLoader(); Swal.fire('Berhasil', '', 'success');
+                            if (type === 'Masuk') currentUser.hasMasuk = true; else currentUser.hasPulang = true;
+                            sessionStorage.setItem('active_user', JSON.stringify(currentUser)); loadDataForUser();
+                        }).apiSubmit(p);
+                    } else { hideLoader(); Swal.fire('Simulasi', 'Berhasil', 'success'); }
+                }
+            });
+        }
+
+        function loadAdminData() {
+            showLoader('Memuat...');
+            if (isGAS) google.script.run.withSuccessHandler(logs => { hideLoader(); allLogsGlobal = logs; renderAdminViews(logs); }).apiGetLogs();
+            else { hideLoader(); renderAdminViews([]); }
+        }
+
+        function renderAdminViews(logs) {
+            const dM = parseInt($('#dashMonth').val()), dY = parseInt($('#dashYear').val());
+            const rM = parseInt($('#rekapMonth').val()), rY = parseInt($('#rekapYear').val());
+            let stats = {}, cD = 0, cT = 0, cK = 0;
+            logs.forEach(log => {
+                const p = log.tanggal.split('/');
+                if(log.jamMasuk && parseInt(p[1]) === dM && parseInt(p[2]) === dY) {
+                    const r = (log.role || "").toLowerCase();
+                    if(r.includes("dosen")) cD++; else if(r.includes("tendik")) cT++; else cK++;
+                    if(!stats[log.nip]) stats[log.nip] = { n: log.nama, r: log.role, p: log.prodi, normal: 0, overtime: 0 };
+                    if (isWeekend(log.tanggal)) stats[log.nip].overtime++; else stats[log.nip].normal++;
+                }
+            });
+            $('#statCountDosen').text(cD); $('#statCountTendik').text(cT); $('#statCountKaryawan').text(cK);
+            if (statsTableInstance) statsTableInstance.destroy();
+            const sBody = $('#statsTableBody').empty();
+            Object.values(stats).forEach(i => sBody.append(`<tr><td class="fw-bold">${i.n}</td><td>${i.r}</td><td>${i.p}</td><td class="text-center"><span class="text-primary fw-bold">${i.normal}</span></td><td class="text-center"><span class="text-warning fw-bold">${i.overtime}</span></td></tr>`));
+            statsTableInstance = $('#statsTable').DataTable({ pageLength: 5, order:[[3,'desc']] });
+            if (dataTableInstance) dataTableInstance.destroy();
+            const tbody = $('#adminTable tbody').empty();
+            logs.slice().reverse().forEach(log => {
+                const p = log.tanggal.split('/');
+                if (parseInt(p[1]) === rM && parseInt(p[2]) === rY) {
+                    const ket = isWeekend(log.tanggal) ? '<span class="badge bg-warning text-dark">Lembur</span>' : '<span class="badge bg-info text-white">Hadir</span>';
+                    tbody.append(`<tr><td>${log.tanggal}</td><td><code>${log.nip}</code></td><td class="text-start">${log.nama}</td><td>${log.prodi}</td><td>${log.jamMasuk || '-'}</td><td>${log.jamPulang || '-'}</td><td>${ket}</td><td>-</td></tr>`);
+                }
+            });
+            dataTableInstance = $('#adminTable').DataTable({ pageLength: 10 });
+        }
+
+        function exportToExcel() {
+            const tableData = [['Laporan Presensi Bulanan'], ['Tanggal', 'NIP', 'Nama', 'Prodi', 'Masuk', 'Pulang', 'Keterangan']];
+            dataTableInstance.rows({search:'applied'}).every(function() {
+                const d = this.data();
+                tableData.push([d[0], d[1].replace(/<[^>]*>/g, ''), d[2], d[3], d[4], d[5], d[6].includes('Lembur') ? 'Lembur' : 'Hadir']);
+            });
+            XLSX.writeFile(XLSX.utils.book_append_sheet(XLSX.utils.book_new(), XLSX.utils.aoa_to_sheet(tableData), "Rekap"), "Laporan_Presensi.xlsx");
+        }
+
+        function saveConfig() { campusConfig = { lat: parseFloat($('#cfgLat').val()), lng: parseFloat($('#cfgLng').val()), radius: parseInt($('#cfgRad').val()) }; localStorage.setItem('campus_cfg', JSON.stringify(campusConfig)); Swal.fire('Tersimpan', '', 'success'); }
+        function showLoader(txt) { $('#loaderText').text(txt); $('#loader').css('display', 'flex'); }
+        function hideLoader() { $('#loader').hide(); }
+        function switchAdminSubView(sub, el) { $('.admin-sub-view').addClass('d-none'); $('.sidebar-link').removeClass('active'); $(el).addClass('active'); if (sub === 'dash') $('#subViewDash').removeClass('d-none'); else if (sub === 'rekap') $('#subViewRekap').removeClass('d-none'); else if (sub === 'setting') { $('#subViewSetting').removeClass('d-none'); $('#cfgLat').val(campusConfig.lat); $('#cfgLng').val(campusConfig.lng); $('#cfgRad').val(campusConfig.radius); } }
+        
+        function handleChangePassword() {
+            const newP = $('#confirmInputNewPass').val().trim(), confP = $('#confirmPass').val().trim();
+            if (newP.length < 6) return Swal.fire('Minimal 6 karakter', '', 'warning');
+            if (newP !== confP) return Swal.fire('Password tidak cocok', '', 'warning');
+            showLoader('Menyimpan...');
+            if (isGAS) {
+                google.script.run.withSuccessHandler((res) => {
+                    hideLoader();
+                    if (res.success) { 
+                        currentUser.password = newP; 
+                        sessionStorage.setItem('active_user', JSON.stringify(currentUser)); 
+                        Swal.fire('Berhasil', 'Password diperbarui', 'success'); 
+                        routeView('User');
+                    } else Swal.fire('Gagal', res.message, 'error');
+                }).apiChangePassword(currentUser.nip, newP);
+            } else { 
+                hideLoader(); 
+                currentUser.password = newP; 
+                sessionStorage.setItem('active_user', JSON.stringify(currentUser)); 
+                Swal.fire('Simulasi', 'Berhasil', 'success'); 
+                routeView('User');
+            }
+        }
+    </script>
+</body>
+</html>
