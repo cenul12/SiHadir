@@ -453,7 +453,7 @@
 
     <script>
 
-        const GAS_URL = "ISI_DENGAN_URL_WEB_APP_ANDA_YANG_BARU";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyB32MH4zCbTKCq_HCC0eTKvV2z6HCXmMwfb7gL90IIym0lJNY3-V9tg2m2JxcLhTB_/exec";
 
         let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -6.2, lng: 106.8, radius: 200 };
         let currentUser = null;
@@ -470,7 +470,7 @@
 
         // FUNGSI UTAMA UNTUK KOMUNIKASI DENGAN DATABASE GAS
         async function fetchServer(action, payload) {
-            if (GAS_URL === "ISI_DENGAN_URL_WEB_APP_ANDA_YANG_BARU" || GAS_URL === "") {
+            if (GAS_URL === "https://script.google.com/macros/s/AKfycbyB32MH4zCbTKCq_HCC0eTKvV2z6HCXmMwfb7gL90IIym0lJNY3-V9tg2m2JxcLhTB_/exec" || GAS_URL === "") {
                 throw new Error("URL Server belum diatur! Ganti baris 'const GAS_URL' di file index.html.");
             }
             
