@@ -451,7 +451,7 @@
         // =====================================================================
         // URL API ANDA (Wajib diisi jika hosting di Netlify / Luar GAS)
         // =====================================================================
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyDSiODR4W8-Q1bPkx_VgJAe2Gh4ajphiBRtZmnAUuAvAyDxgEL2Ftrn9vcPQhNTumj/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxbPEQIKp_bOWETVy3M4BYUmuD-UF1eO0yJpKRUBvSNfmdsc325Mz1INngFa4N7C0X8/exec";
 
         let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -6.2, lng: 106.8, radius: 200 };
         let currentUser = null;
@@ -793,6 +793,7 @@
             if (view === 'Login') { 
                 $('#viewLogin').addClass('active'); 
                 $('#inputNip, #inputPass').val(''); 
+                $('#bottomNav').removeClass('visible'); // Sembunyikan menu navigasi bawah
             } else if (view === 'User') {
                 $('#viewUser').addClass('active');
             } else if (view === 'Rekap') {
@@ -853,7 +854,13 @@
         }
 
         function logout(isAuto = false) { 
-            const perform = () => { sessionStorage.removeItem('active_user'); sessionStorage.removeItem('login_timestamp'); if (gpsWatcher) navigator.geolocation.clearWatch(gpsWatcher); routeView('Login'); };
+            const perform = () => { 
+                sessionStorage.removeItem('active_user'); 
+                sessionStorage.removeItem('login_timestamp'); 
+                if (gpsWatcher) navigator.geolocation.clearWatch(gpsWatcher); 
+                currentUser = null; // Hapus variabel user di memori
+                routeView('Login'); 
+            };
             if (isAuto) { perform(); Swal.fire('Sesi Habis', 'Silakan login kembali', 'info'); return; }
             Swal.fire({ title: 'Keluar?', icon: 'warning', showCancelButton: true }).then(r => { if(r.isConfirmed) perform(); });
         }
