@@ -444,7 +444,7 @@
         // =====================================================================
         // URL API ANDA (Wajib diisi jika hosting di Netlify / Luar GAS)
         // =====================================================================
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyfISwuchJzoA_6SLH5ZtM6zyGLYi1LFDEd3MVPp1CKFpbVvhd4at0vdLmVyFSohFFu/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbystycbb0Kw9N71lEdN89t9_8voV9rMuc_xGKXUZ3i_e5quKs3C29qGEgqCCmR9rWDj/exec";
 
         let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -8.5878869, lng: 116.0969333, radius: 13 };
         let currentUser = null;
@@ -454,6 +454,13 @@
         let statsTableInstance = null;
         let allLogsGlobal = []; 
         let deferredPrompt = null; // Variabel penampung untuk Install PWA
+
+        // Pindahkan listener ke global agar tidak terlewat jika dipanggil sangat cepat oleh browser
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            $('#installPrompt').removeClass('d-none');
+        });
 
         const TIMEZONE = 'Asia/Makassar'; 
         const isGAS = typeof google !== 'undefined' && typeof google.script !== 'undefined';
@@ -548,18 +555,19 @@
         // LOGIKA INSTALASI PWA (APP INSTALL PROMPT)
         // ============================================
         function initPWAInstall() {
-            window.addEventListener('beforeinstallprompt', (e) => {
-                // Cegah browser menampilkan prompt bawaannya sendiri
-                e.preventDefault();
-                // Simpan event untuk kita gunakan nanti saat tombol diklik
-                deferredPrompt = e;
-                // Tampilkan banner notifikasi custom kita
-                $('#installPrompt').removeClass('d-none');
-            });
+            // Cek apakah aplikasi sudah diinstal (berjalan di mode standalone)
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+            
+            // Jika belum diinstal, paksakan tampilkan banner setelah jeda 3 detik
+            if (!isStandalone) {
+                setTimeout(() => {
+                    $('#installPrompt').removeClass('d-none');
+                }, 9000);
+            }
 
             $('#btnInstall').on('click', async () => {
                 if (deferredPrompt) {
-                    // Tampilkan prompt bawaan OS/Browser
+                    // Tampilkan prompt bawaan OS/Browser jika tersedia
                     deferredPrompt.prompt();
                     // Tunggu keputusan pengguna
                     const { outcome } = await deferredPrompt.userChoice;
@@ -567,6 +575,17 @@
                     // Kita tak butuh prompt ini lagi
                     deferredPrompt = null;
                     // Sembunyikan banner
+                    $('#installPrompt').addClass('d-none');
+                } else {
+                    // Fallback Modal jika browser menolak PWA otomatis atau sedang di iOS iPhone
+                    Swal.fire({
+                        title: 'Cara Install Manual',
+                        html: navigator.userAgent.match(/iPhone|iPad|iPod/i) 
+                            ? 'Tap ikon <b>Bagikan (Share)</b> di bagian bawah browser Safari Anda, lalu gulir ke bawah dan pilih <br><b>"Tambah ke Layar Utama"</b>.'
+                            : 'Tap ikon <b>Menu (titik tiga)</b> di sudut kanan atas browser Chrome/Edge Anda, lalu pilih <br><b>"Tambahkan ke Layar Utama"</b> atau <b>"Install Aplikasi"</b>.',
+                        icon: 'info',
+                        confirmButtonText: 'Mengerti'
+                    });
                     $('#installPrompt').addClass('d-none');
                 }
             });
