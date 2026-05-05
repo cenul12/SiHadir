@@ -7,12 +7,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2563eb">
-    <title>SiHadir Pro</title>
+    <title>SiHadir LIT</title>
 
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22SiHadir%20Pro%22%2C%22short_name%22%3A%22SiHadir%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F6144%2F6144574.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22SiHadir%20LIT%22%2C%22short_name%22%3A%22SiHadir%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22logo.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
     
     <!-- Ikon Aplikasi untuk iOS -->
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/6144/6144574.png">
+    <link rel="apple-touch-icon" href="logo.png">
 
     <!-- CSS Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -124,7 +124,7 @@
     <!-- VIEW: LOGIN -->
     <div id="viewLogin" class="view-section active">
         <div class="app-header text-center">
-            <h4 class="mb-0 fw-bold"><i class="fas fa-fingerprint me-2"></i>SiHadir Pro</h4>
+            <h4 class="mb-0 fw-bold"><i class="fas fa-fingerprint me-2"></i>SiHadir LIT</h4>
             <p class="mb-0 mt-1 text-white-50 small">Presensi Kampus Berbasis Lokasi</p>
         </div>
         <div class="container main-content">
@@ -155,7 +155,7 @@
         <div class="app-header">
             <div class="max-container">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h5 class="mb-0 fw-bold"><i class="fas fa-fingerprint me-2"></i>SiHadir Pro</h5>
+                    <h5 class="mb-0 fw-bold"><i class="fas fa-fingerprint me-2"></i>SiHadir LIT</h5>
                     <div id="dashPhoto" class="dash-photo">
                         <i class="fas fa-user text-white"></i>
                     </div>
@@ -354,7 +354,7 @@
                     <button class="btn btn-outline-danger rounded-pill fw-bold py-2 px-5 shadow-sm border-2 transition-all" onclick="logout()">
                         <i class="fas fa-power-off me-2"></i> KELUAR DARI SISTEM
                     </button>
-                    <p class="text-muted mt-3 small opacity-50 fw-semibold">SiHadir Pro v1.3</p>
+                    <p class="text-muted mt-3 small opacity-50 fw-semibold">SiHadir LIT v1.4</p>
                 </div>
             </div>
         </div>
@@ -451,7 +451,7 @@
         // =====================================================================
         // URL API ANDA (Wajib diisi jika hosting di Netlify / Luar GAS)
         // =====================================================================
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwcwQG6SolEtauKLC4qD184OlgU-0qrHuLSm4rpBvvcjC8p5hzIMOms4ihkKF5UfND3/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyqNjQt73hDPli1UnipE3m_-2Epuacf-uTzJtuR47117As9nhnc__r0oyv1OEmVy8WM/exec";
 
         let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -6.2, lng: 106.8, radius: 200 };
         let currentUser = null;
