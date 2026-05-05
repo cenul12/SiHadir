@@ -1003,9 +1003,9 @@
                     const ket = isWeekend(log.tanggal) ? '<span class="badge bg-warning text-dark">Lembur</span>' : '<span class="badge bg-info text-white">Hadir</span>';
                     
                     // --- BAGIAN YANG DIPERBAIKI ---
-                    // Cek apakah database mengirimkan data lokasi (biasanya bernama log.lokasi, log.gps, atau log.lat,lng)
+                    // Mengambil data dari kolom "LOKASI MASUK" atau "LOKASI PULANG" di Spreadsheet
                     let gpsButton = '-';
-                    const coord = log.lokasi || log.gps || (log.lat ? `${log.lat},${log.lng}` : null);
+                    const coord = log.lokasiMasuk || log['LOKASI MASUK'] || log.lokasiPulang || log['LOKASI PULANG'] || log.lokasi || log.gps;
                     
                     if (coord) {
                         gpsButton = `<a href="https://maps.google.com/?q=${coord}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;"><i class="fas fa-map-marker-alt me-1"></i> Peta</a>`;
