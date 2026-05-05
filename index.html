@@ -468,7 +468,7 @@
 
         // FUNGSI UTAMA UNTUK KOMUNIKASI DENGAN DATABASE GAS (TANPA SIMULASI)
         async function fetchServer(action, payload) {
-            if (GAS_URL === "" || GAS_URL === "") {
+            if (!GAS_URL || GAS_URL === "") {
                 throw new Error("URL Server belum diatur! Ganti baris 'const GAS_URL' di file index.html.");
             }
             
