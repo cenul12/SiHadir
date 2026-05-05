@@ -352,7 +352,7 @@
                 </div>
                 <div class="d-flex flex-column align-items-center justify-content-center mt-5">
                     <button class="btn btn-outline-danger rounded-pill fw-bold py-2 px-5 shadow-sm border-2 transition-all" onclick="logout()">
-                        <i class="fas fa-power-off me-2"></i> KELUAR DARI SISTEM
+                        <i class="fas fa-power-off me-2"></i> KELUAR
                     </button>
                     <p class="text-muted mt-3 small opacity-50 fw-semibold">SiHadir LIT v1.4</p>
                 </div>
@@ -692,7 +692,7 @@
 
         function handleLogin() {
             const nip = $('#inputNip').val().trim(), pass = $('#inputPass').val().trim();
-            if(!nip || !pass) return Swal.fire('Peringatan', 'NIP dan Sandi harus diisi!', 'warning');
+            if(!nip || !pass) return Swal.fire('Peringatan', 'User dan Sandi harus diisi!', 'warning');
             
             showLoader('Verifikasi Akun...');
             if (isGAS) {
@@ -764,7 +764,7 @@
                 $('#userDashboardName').text(currentUser.nama || '-'); 
                 $('#userDashboardProdi').text(currentUser.prodi || '-');
                 $('#profileName').text(currentUser.nama || '-'); 
-                $('#profileNip').text("NIP: " + (currentUser.nip || '-'));
+                $('#profileNip').text("NIY/NUPTK: " + (currentUser.nip || '-'));
                 $('#profileRole').text(currentUser.role || '-'); 
                 $('#userDashboardProdiDetail').text(currentUser.prodi || '-');
                 
@@ -1029,7 +1029,7 @@
 
         function exportToExcel() {
             // Header Excel Diperbarui (kembali tanpa GPS)
-            const tableData = [['Laporan Presensi Bulanan'], ['Tanggal', 'NIP', 'Nama', 'Prodi', 'Masuk', 'Pulang', 'Keterangan']];
+            const tableData = [['Laporan Presensi Bulanan'], ['Tanggal', 'NIY/NUPTK', 'Nama', 'Prodi', 'Masuk', 'Pulang', 'Keterangan']];
 
             dataTableInstance.rows({search:'applied'}).every(function() {
                 const d = this.data();
