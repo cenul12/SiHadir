@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#2563eb">
     <title>SiHadir LIT</title>
 
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22SiHadir%20LIT%22%2C%22short_name%22%3A%22SiHadir%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22logo.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22SiHadir%20LIT%22%2C%22short_name%22%3A%22Presensi%20LIT%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22logo.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
     
     <!-- Ikon Aplikasi untuk iOS -->
     <link rel="apple-touch-icon" href="logo.png">
@@ -125,7 +125,7 @@
     <div id="viewLogin" class="view-section active">
         <div class="app-header text-center">
             <h4 class="mb-0 fw-bold"><i class="fas fa-fingerprint me-2"></i>SiHadir LIT</h4>
-            <p class="mb-0 mt-1 text-white-50 small">Presensi Kampus Berbasis Lokasi</p>
+            <p class="mb-0 mt-1 text-white-50 small">Sistem Presensi LIT</p>
         </div>
         <div class="container main-content">
             <div class="glass-card p-4 text-center mx-auto shadow-lg" style="max-width: 400px; height: auto;">
@@ -133,18 +133,18 @@
                     <i class="fas fa-shield-alt fa-2x"></i>
                 </div>
                 <h4 class="fw-bold text-dark mb-1">Portal Autentikasi</h4>
-                <p class="text-muted small mb-4">Silakan masuk menggunakan NIP Anda.</p>
+                <p class="text-muted small mb-4">Silakan masuk menggunakan akun Anda.</p>
                 
                 <form id="loginForm">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control border-0 bg-light rounded-4" id="inputNip" placeholder="Username" required>
-                        <label class="text-muted">Username (NIP)</label>
+                        <label class="text-muted">Username</label>
                     </div>
                     <div class="form-floating mb-4">
                         <input type="password" class="form-control border-0 bg-light rounded-4" id="inputPass" placeholder="Password" required>
                         <label class="text-muted">Password</label>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 btn-action shadow-lg">MASUK SISTEM <i class="fas fa-sign-in-alt ms-2"></i></button>
+                    <button type="submit" class="btn btn-primary w-100 btn-action shadow-lg">MASUK<i class="fas fa-sign-in-alt ms-2"></i></button>
                 </form>
             </div>
         </div>
@@ -216,7 +216,7 @@
                     <div class="col-12 col-lg-7">
                         <div class="glass-card p-4 p-md-5 text-center">
                             <div class="d-flex justify-content-between align-items-center mb-4">
-                                <span class="small fw-bold text-muted"><i class="fas fa-broadcast-tower me-1 text-primary"></i> STATUS GEOFENCING</span>
+                                <span class="small fw-bold text-muted"><i class="fas fa-broadcast-tower me-1 text-primary"></i> STATUS LOKASI</span>
                                 <button class="btn btn-sm btn-light rounded-circle shadow-sm" onclick="initGeofence()"><i class="fas fa-sync-alt text-primary"></i></button>
                             </div>
                             
@@ -311,7 +311,7 @@
                                 <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
                             </div>
                             <h4 class="fw-bold mb-0 text-dark" id="profileName">-</h4>
-                            <p class="text-muted small mb-3 fw-semibold" id="profileNip">NIP: -</p>
+                            <p class="text-muted small mb-3 fw-semibold" id="profileNip">NIDN/NUPTK: -</p>
                             <div class="d-flex flex-wrap justify-content-center gap-2 mb-2">
                                 <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 border border-primary border-opacity-10" id="profileRole">-</span>
                                 <span class="badge bg-light text-dark rounded-pill px-3 py-2 border" id="userDashboardProdiDetail">-</span>
@@ -352,7 +352,7 @@
                 </div>
                 <div class="d-flex flex-column align-items-center justify-content-center mt-5">
                     <button class="btn btn-outline-danger rounded-pill fw-bold py-2 px-5 shadow-sm border-2 transition-all" onclick="logout()">
-                        <i class="fas fa-power-off me-2"></i> KELUAR DARI SISTEM
+                        <i class="fas fa-power-off me-2"></i> KELUAR
                     </button>
                     <p class="text-muted mt-3 small opacity-50 fw-semibold">SiHadir LIT v1.4</p>
                 </div>
@@ -451,9 +451,9 @@
         // =====================================================================
         // URL API ANDA (Wajib diisi jika hosting di Netlify / Luar GAS)
         // =====================================================================
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxbPEQIKp_bOWETVy3M4BYUmuD-UF1eO0yJpKRUBvSNfmdsc325Mz1INngFa4N7C0X8/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbzR-Hdt8yJmk_p0f-uG10c5PYo3TM2_z3cLJU06ZI7iBb37iaevDvazeWqDRnc1w_4B/exec";
 
-        let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -6.2, lng: 106.8, radius: 200 };
+        let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -8.5877531, lng: 116.0971025, radius: 200 };
         let currentUser = null;
         let currentPos = null;
         let gpsWatcher = null;
@@ -468,7 +468,7 @@
 
         // FUNGSI UTAMA UNTUK KOMUNIKASI DENGAN DATABASE GAS (TANPA SIMULASI)
         async function fetchServer(action, payload) {
-            if (GAS_URL === "ISI_DENGAN_URL_WEB_APP_ANDA_YANG_BARU" || GAS_URL === "") {
+            if (GAS_URL === "https://script.google.com/macros/s/AKfycbzR-Hdt8yJmk_p0f-uG10c5PYo3TM2_z3cLJU06ZI7iBb37iaevDvazeWqDRnc1w_4B/exec" || GAS_URL === "") {
                 throw new Error("URL Server belum diatur! Ganti baris 'const GAS_URL' di file index.html.");
             }
             
@@ -628,7 +628,7 @@
             const now = new Date();
             const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: TIMEZONE };
             const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: TIMEZONE };
-            $('#uTime').text(now.toLocaleTimeString('id-ID', timeOptions));
+            $('#uTime').text(now.toLocaleTimeString('id-ID', timeOptions).replace(/\./g, ':'));
             $('#uDate').text(now.toLocaleDateString('id-ID', dateOptions));
             
             if (currentUser && currentUser.role !== 'Admin') {
