@@ -1001,8 +1001,12 @@
                 const p = log.tanggal.split('/');
                 if (parseInt(p[1]) === rM && parseInt(p[2]) === rY) {
                     const ket = isWeekend(log.tanggal) ? '<span class="badge bg-warning text-dark">Lembur</span>' : '<span class="badge bg-info text-white">Hadir</span>';
+                    
+                    // --- BAGIAN YANG DIPERBAIKI ---
+                    // Cek apakah database mengirimkan data lokasi (biasanya bernama log.lokasi, log.gps, atau log.lat,lng)
                     let gpsButton = '-';
                     const coord = log.lokasi || log.gps || (log.lat ? `${log.lat},${log.lng}` : null);
+                    
                     if (coord) {
                         gpsButton = `<a href="https://maps.google.com/?q=${coord}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;"><i class="fas fa-map-marker-alt me-1"></i> Peta</a>`;
                     }
