@@ -451,7 +451,7 @@
         // =====================================================================
         // URL API ANDA (Wajib diisi jika hosting di Netlify / Luar GAS)
         // =====================================================================
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbyqNjQt73hDPli1UnipE3m_-2Epuacf-uTzJtuR47117As9nhnc__r0oyv1OEmVy8WM/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbyx-vvoTbi-2Q5_6d7UWoTYLkOdgfR1j__A4HCkzqqlyHJ77HiTzC-7sqFDW4Z3vfni/exec";
 
         let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -6.2, lng: 106.8, radius: 200 };
         let currentUser = null;
@@ -521,22 +521,42 @@
 
        // ================= LOGIKA PWA =================
         function initPWA() {
+            // SUNTIKAN SERVICE WORKER OTOMATIS AGAR CHROME MENERIMA SEBAGAI PWA
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    self.addEventListener('install', (e) => { self.skipWaiting(); });
+                    self.addEventListener('activate', (e) => { e.waitUntil(clients.claim()); });
+                    self.addEventListener('fetch', (e) => { });
+                `;
+                const blob = new Blob([swCode], {type: 'application/javascript'});
+                const swUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swUrl).catch(err => console.warn('SW:', err));
+            }
+
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
+                
+                // Jika event browser tertangkap dan belum di-close, tampilkan
+                const bannerClosed = localStorage.getItem('pwa_banner_closed');
+                if (!bannerClosed) {
+                    const banner = document.getElementById('floatingInstallBanner');
+                    if (banner) banner.classList.add('show');
+                }
             });
 
             try {
                 const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
                 const bannerClosed = localStorage.getItem('pwa_banner_closed');
 
-                if (!isStandalone) {
-                    if (!bannerClosed) {
-                        setTimeout(() => { 
-                            const banner = document.getElementById('floatingInstallBanner');
-                            if(banner) banner.classList.add('show'); 
-                        }, 1500);
-                    }
+                // Fallback manual setelah 1.5 detik (Berguna untuk Safari/iOS atau jika beforeinstallprompt lambat)
+                if (!isStandalone && !bannerClosed) {
+                    setTimeout(() => { 
+                        const banner = document.getElementById('floatingInstallBanner');
+                        if (banner && !banner.classList.contains('show')) {
+                            banner.classList.add('show'); 
+                        }
+                    }, 1500);
                 }
             } catch (e) {
                 console.warn('PWA init error:', e);
@@ -568,8 +588,8 @@
                     <div class="text-start" style="font-size: 0.9rem;">
                         <p>Untuk memunculkan logo aplikasi di layar utama HP Anda:</p>
                         <ol class="mb-0 ps-3 text-muted">
-                            <li class="mb-2">Ketuk ikon <b>Menu (titik tiga ⋮)</b> di browser Anda.</li>
-                            <li class="mb-2">Pilih menu <b>"Tambahkan ke Layar Utama"</b>.</li>
+                            <li class="mb-2">Ketuk ikon <b>Menu (titik tiga ⋮) / Share</b> di browser Anda.</li>
+                            <li class="mb-2">Pilih menu <b>"Tambahkan ke Layar Utama" (Add to Home Screen)</b>.</li>
                             <li>Ketuk tombol <b>"Tambahkan"</b>.</li>
                         </ol>
                     </div>
