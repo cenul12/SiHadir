@@ -144,7 +144,7 @@
                         <input type="password" class="form-control border-0 bg-light rounded-4" id="inputPass" placeholder="Password" required>
                         <label class="text-muted">Password</label>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 btn-action shadow-lg">MASUK<i class="fas fa-sign-in-alt ms-2"></i></button>
+                    <button type="submit" class="btn btn-primary w-100 btn-action shadow-lg">MASUK <i class="fas fa-sign-in-alt ms-2"></i></button>
                 </form>
             </div>
         </div>
@@ -311,7 +311,7 @@
                                 <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhotoUpload(this)">
                             </div>
                             <h4 class="fw-bold mb-0 text-dark" id="profileName">-</h4>
-                            <p class="text-muted small mb-3 fw-semibold" id="profileNip">NIDN/NUPTK: -</p>
+                            <p class="text-muted small mb-3 fw-semibold" id="profileNip">NIY/NUPTK: -</p>
                             <div class="d-flex flex-wrap justify-content-center gap-2 mb-2">
                                 <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 border border-primary border-opacity-10" id="profileRole">-</span>
                                 <span class="badge bg-light text-dark rounded-pill px-3 py-2 border" id="userDashboardProdiDetail">-</span>
@@ -453,7 +453,7 @@
         // =====================================================================
         const GAS_URL = "https://script.google.com/macros/s/AKfycbzR-Hdt8yJmk_p0f-uG10c5PYo3TM2_z3cLJU06ZI7iBb37iaevDvazeWqDRnc1w_4B/exec";
 
-        let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -8.5877531, lng: 116.0971025, radius: 200 };
+        let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -6.2, lng: 106.8, radius: 200 };
         let currentUser = null;
         let currentPos = null;
         let gpsWatcher = null;
@@ -628,6 +628,8 @@
             const now = new Date();
             const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: TIMEZONE };
             const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: TIMEZONE };
+            
+            // Ganti titik menjadi titik dua dengan replace
             $('#uTime').text(now.toLocaleTimeString('id-ID', timeOptions).replace(/\./g, ':'));
             $('#uDate').text(now.toLocaleDateString('id-ID', dateOptions));
             
