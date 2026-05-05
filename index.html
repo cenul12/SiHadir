@@ -468,7 +468,7 @@
 
         // FUNGSI UTAMA UNTUK KOMUNIKASI DENGAN DATABASE GAS (TANPA SIMULASI)
         async function fetchServer(action, payload) {
-            if (GAS_URL === "https://script.google.com/macros/s/AKfycbzR-Hdt8yJmk_p0f-uG10c5PYo3TM2_z3cLJU06ZI7iBb37iaevDvazeWqDRnc1w_4B/exec" || GAS_URL === "") {
+            if (GAS_URL === "https://script.google.com/macros/s/AKfycbzR-Hdt8yJmk_p0f-uG10c5PYo3TM2_z3cLJU06ZI7iBb37iaevDvazeWqDRnc1w_4B/exec" || GAS_URL === "https://script.google.com/macros/s/AKfycbzR-Hdt8yJmk_p0f-uG10c5PYo3TM2_z3cLJU06ZI7iBb37iaevDvazeWqDRnc1w_4B/exec") {
                 throw new Error("URL Server belum diatur! Ganti baris 'const GAS_URL' di file index.html.");
             }
             
