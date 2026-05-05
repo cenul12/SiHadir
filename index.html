@@ -9,11 +9,6 @@
     <meta name="theme-color" content="#2563eb">
     <title>SiHadir Pro</title>
 
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22SiHadir%20Pro%22%2C%22short_name%22%3A%22SiHadir%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%232563eb%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fcdn-icons-png.flaticon.com%2F512%2F6144%2F6144574.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D">
-    
-    <!-- Ikon Aplikasi untuk iOS -->
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/6144/6144574.png">
-
     <!-- CSS Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -22,7 +17,7 @@
 
     <style>
         :root { --primary: #2563eb; --secondary: #1e40af; --bg-light: #f8fafc; --sidebar-width: 260px; }
-        body { background-color: var(--bg-light); font-family: 'Segoe UI', system-ui, sans-serif; overflow-x: hidden; min-height: 100vh; margin: 0; padding: 0; -webkit-user-select: none; user-select: none; }
+        body { background-color: var(--bg-light);overflow-x: hidden; font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; margin: 0; padding: 0; -webkit-user-select: none; user-select: none; }
         
         /* Glass Card Style */
         .glass-card { background: #ffffff; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 8px 30px rgba(0,0,0,0.04); transition: all 0.3s ease; height: 100%; }
@@ -82,17 +77,16 @@
             .main-content { margin-top: -4.5rem; }
         }
 
-         /* Input pada PWA agar bisa di-select */
+        /* Input agar bisa di-select */
         input, textarea, select { -webkit-user-select: auto !important; user-select: auto !important; }
 
-        /* Banner Install PWA Kustom */
+         /* Banner Install PWA Kustom */
         #installBanner { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 400px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 9999; display: none; padding: 15px; align-items: center; justify-content: space-between; border: 1px solid #e2e8f0; }
         #installBanner.show { display: flex; animation: slideUpBanner 0.5s ease-out; }
         @keyframes slideUpBanner { from { bottom: 0; opacity: 0; } to { bottom: 80px; opacity: 1; } }
     </style>
 </head>
 <body>
-
     <!-- Banner Install PWA Kustom -->
     <div id="installBanner">
         <div class="d-flex align-items-center">
@@ -122,17 +116,6 @@
         </div>
         <div class="container main-content">
             <div class="glass-card p-4 text-center mx-auto shadow-lg" style="max-width: 400px; height: auto;">
-              <!-- Notifikasi PWA Langsung di Login -->
-                <div id="pwaLoginAlert" class="alert alert-primary bg-primary bg-opacity-10 border-0 shadow-sm rounded-4 mb-4 text-start d-none align-items-center justify-content-between p-3">
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-mobile-alt fa-2x text-primary me-3"></i>
-                        <div>
-                            <strong class="d-block small text-primary">Instal Aplikasi</strong>
-                            <span style="font-size: 0.75rem;" class="text-primary opacity-75">Buka langsung dari layar beranda</span>
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-sm btn-primary rounded-pill fw-bold shadow-sm" onclick="triggerNativeInstall()">Pasang</button>
-                </div>
                 <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex p-3 mb-3">
                     <i class="fas fa-shield-alt fa-2x"></i>
                 </div>
@@ -193,7 +176,7 @@
 
         <div class="container-fluid main-content px-3">
             <div class="max-container">
-                <!-- Alert Keamanan Akun (Sandi Bawaan) -->
+                <!-- Alert Keamanan Akun -->
                 <div id="alertChangePass" class="alert alert-warning border-0 shadow-sm rounded-4 mb-4 d-none">
                     <div class="d-flex align-items-center">
                         <i class="fas fa-key me-3 fa-lg"></i>
@@ -323,7 +306,7 @@
                         </div>
                     </div>
 
-                    <!-- Sisi Kanan: Form Ganti Sandi (Tampilan Sebelumnya) -->
+                    <!-- Sisi Kanan: Form Ganti Sandi -->
                     <div class="col-12 col-md-7">
                         <div class="glass-card p-4">
                             <div class="bg-light p-3 rounded-4 border border-white">
@@ -358,7 +341,7 @@
                     <button class="btn btn-outline-danger rounded-pill fw-bold py-2 px-5 shadow-sm border-2 transition-all" onclick="logout()">
                         <i class="fas fa-power-off me-2"></i> KELUAR DARI SISTEM
                     </button>
-                    <p class="text-muted mt-3 small opacity-50 fw-semibold">SiHadir Pro v1.3</p>
+                    <p class="text-muted mt-3 small opacity-50 fw-semibold">SiHadir Pro v1.4</p>
                 </div>
             </div>
         </div>
@@ -452,17 +435,18 @@
     <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
 
     <script>
+        // =====================================================================
+        // URL API ANDA (Wajib diisi jika hosting di Netlify / Luar GAS)
+        // =====================================================================
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwO6KqjDNHfnoCHGLkxLmQ3cNCZLZHZ2WDbZNgoX8J3ARVW4cKZWTnqlfIBdqVngG5f/exec";
 
-        const GAS_URL = "https://script.google.com/macros/s/AKfycby0D6v3HqSGFSOZaFM7d9vDX8cM6GSPki9J4ku-7kAXkBjL5HAKDGNnbgr40mBDhE06/exec";
-
-        let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -6.2, lng: 106.8, radius: 200 };
+        let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -8.5878869, lng: 116.0969333, radius: 13 };
         let currentUser = null;
         let currentPos = null;
         let gpsWatcher = null;
         let dataTableInstance = null;
         let statsTableInstance = null;
         let allLogsGlobal = []; 
-        let deferredPrompt;
 
         const TIMEZONE = 'Asia/Makassar'; 
         const isGAS = typeof google !== 'undefined' && typeof google.script !== 'undefined';
@@ -470,7 +454,7 @@
 
         // FUNGSI UTAMA UNTUK KOMUNIKASI DENGAN DATABASE GAS
         async function fetchServer(action, payload) {
-            if (GAS_URL === "https://script.google.com/macros/s/AKfycbyB32MH4zCbTKCq_HCC0eTKvV2z6HCXmMwfb7gL90IIym0lJNY3-V9tg2m2JxcLhTB_/exec" || GAS_URL === "") {
+            if (GAS_URL === "ISI_DENGAN_URL_WEB_APP_ANDA_YANG_BARU" || GAS_URL === "") {
                 throw new Error("URL Server belum diatur! Ganti baris 'const GAS_URL' di file index.html.");
             }
             
@@ -486,7 +470,36 @@
                 return result.data;
             } catch (err) {
                 console.error("Fetch Error:", err);
-                throw new Error("Gagal terhubung ke server database.");
+                throw new Error("Gagal terhubung ke server database. Pastikan koneksi internet stabil dan URL benar.");
+            }
+        }
+
+        // FUNGSI UNTUK SINKRONISASI PENGATURAN KAMPUS DARI SERVER
+        function syncCampusConfig() {
+            if (isGAS) {
+                google.script.run.withSuccessHandler(cfg => {
+                    if (cfg && cfg.lat) {
+                        campusConfig = cfg;
+                        localStorage.setItem('campus_cfg', JSON.stringify(campusConfig));
+                        
+                        // Perbarui form di admin (jika sedang terbuka)
+                        $('#cfgLat').val(campusConfig.lat);
+                        $('#cfgLng').val(campusConfig.lng);
+                        $('#cfgRad').val(campusConfig.radius);
+                    }
+                }).apiGetConfig();
+            } else {
+                fetchServer('apiGetConfig', {})
+                    .then(cfg => {
+                        if (cfg && cfg.lat) {
+                            campusConfig = cfg;
+                            localStorage.setItem('campus_cfg', JSON.stringify(campusConfig));
+                            $('#cfgLat').val(campusConfig.lat);
+                            $('#cfgLng').val(campusConfig.lng);
+                            $('#cfgRad').val(campusConfig.radius);
+                        }
+                    })
+                    .catch(e => console.warn("Menggunakan pengaturan GPS lokal."));
             }
         }
 
@@ -495,7 +508,9 @@
             setInterval(updateClock, 1000);
             updateClock();
             setInterval(checkSessionExpiry, 60000);
-            initPWA();
+            
+            // Tarik konfigurasi GPS dari server saat pertama kali muat
+            syncCampusConfig();
 
             $('#loginForm').on('submit', function(e) { e.preventDefault(); handleLogin(); });
             $('#formChangePass').on('submit', function(e) { e.preventDefault(); handleChangePassword(); });
@@ -520,87 +535,6 @@
                 } catch(e) { sessionStorage.removeItem('active_user'); }
             }
         });
-
-       // ================= LOGIKA PWA (INSTALL APLIKASI NATIVE) =================
-        function initPWA() {
-            // Mencegat event instalasi native bawaan browser
-            window.addEventListener('beforeinstallprompt', (e) => {
-                // Mencegah prompt mini-infobar muncul secara otomatis
-                e.preventDefault();
-                // Simpan event sehingga bisa kita panggil ketika tombol diklik
-                deferredPrompt = e;
-                console.log("Install prompt tertangkap oleh browser.");
-            });
-
-            try {
-                // Cek apakah aplikasi sudah berjalan dalam mode fullscreen (sudah diinstal)
-                const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-                const bannerClosed = localStorage.getItem('pwa_banner_closed');
-
-                if (!isStandalone) {
-                    // Tampilkan kotak peringatan di halaman Login
-                    $('#pwaLoginAlert').removeClass('d-none').addClass('d-flex');
-                    
-                    // Tampilkan banner melayang di bawah (jika belum disilang)
-                    if (!bannerClosed) {
-                        setTimeout(() => {
-                            document.getElementById('installBanner').classList.add('show');
-                        }, 1500);
-                    }
-                }
-            } catch (e) {
-                console.warn('PWA init error:', e);
-                $('#pwaLoginAlert').removeClass('d-none').addClass('d-flex');
-            }
-        }
-
-        async function triggerNativeInstall() {
-            // Jika browser berhasil menangkap fungsi prompt native (Chrome/Edge Android)
-            if (deferredPrompt) {
-                closeInstallBanner();
-                // Munculkan dialog bawaan dari sistem browser (seperti logo di address bar / bottom sheet bawaan HP)
-                deferredPrompt.prompt();
-                
-                // Menunggu respons apakah user menekan Install atau Cancel
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`Respons user terhadap instalasi: ${outcome}`);
-                
-                // Reset setelah dipakai
-                deferredPrompt = null;
-            } else {
-                // Jika browser memblokir fungsi tersebut karena faktor Iframe Google Apps Script atau Safari iOS
-                // Munculkan panduan manual sebagai cadangan
-                showInstallGuide();
-            }
-        }
-
-        function closeInstallBanner() {
-            document.getElementById('installBanner').classList.remove('show');
-            localStorage.setItem('pwa_banner_closed', 'true');
-        }
-
-        function showInstallGuide() {
-            closeInstallBanner();
-            // Panduan Instalasi Manual (Fallback)
-            Swal.fire({
-                title: 'Cara Pasang Aplikasi',
-                html: `
-                    <div class="text-start" style="font-size: 0.9rem;">
-                        <p>Untuk memunculkan logo aplikasi di layar utama HP Anda:</p>
-                        <ol class="mb-0 ps-3 text-muted">
-                            <li class="mb-2">Ketuk ikon <b>Menu (titik tiga ⋮ atau ikon bagikan)</b> di browser Anda.</li>
-                            <li class="mb-2">Pilih menu <b>"Tambahkan ke Layar Utama"</b> (Add to Home screen).</li>
-                            <li>Ketuk tombol <b>"Tambahkan"</b> atau <b>"Add"</b>.</li>
-                        </ol>
-                    </div>
-                `,
-                icon: 'info',
-                confirmButtonText: 'Saya Mengerti',
-                confirmButtonColor: '#2563eb'
-            });
-        }
-        // =================================================================
-
 
         function initFilters() {
             const now = new Date();
@@ -653,11 +587,20 @@
                         } else Swal.fire('Gagal', res.message, 'error');
                     }).apiUpdatePhoto(currentUser.nip, base64);
                 } else {
-                    setTimeout(() => { 
-                        hideLoader(); currentUser.photo = base64; 
-                        sessionStorage.setItem('active_user', JSON.stringify(currentUser));
-                        updatePhotoUI(base64); Swal.fire('Simulasi', 'Foto diperbarui', 'success');
-                    }, 1000);
+                    fetchServer('apiUpdatePhoto', { nip: currentUser.nip, base64: base64 })
+                        .then(res => {
+                            hideLoader();
+                            if (res.success) {
+                                currentUser.photo = res.url;
+                                sessionStorage.setItem('active_user', JSON.stringify(currentUser));
+                                updatePhotoUI(res.url);
+                                Swal.fire('Berhasil', 'Foto profil diperbarui', 'success');
+                            } else Swal.fire('Gagal', res.message, 'error');
+                        })
+                        .catch(err => {
+                            hideLoader();
+                            Swal.fire('Koneksi Gagal', err.message, 'error');
+                        });
                 }
             };
             reader.readAsDataURL(file);
@@ -671,6 +614,8 @@
 
         function handleLogin() {
             const nip = $('#inputNip').val().trim(), pass = $('#inputPass').val().trim();
+            if(!nip || !pass) return Swal.fire('Peringatan', 'NIP dan Sandi harus diisi!', 'warning');
+            
             showLoader('Verifikasi Akun...');
             if (isGAS) {
                 google.script.run.withSuccessHandler((user) => {
@@ -684,18 +629,28 @@
                         if (isDefault) routeView('Profile');
                         else routeView(user.role === 'Admin' ? 'Admin' : 'User');
                     } else Swal.fire('Error', 'Username/password salah', 'error');
+                }).withFailureHandler((err) => {
+                    hideLoader();
+                    Swal.fire('Error', err.message, 'error');
                 }).apiLogin(nip, pass);
             } else {
-                setTimeout(() => {
-                    hideLoader();
-                    currentUser = { nip, nama: 'Husnul Ramdani', role: nip === 'admin' ? 'Admin' : 'Dosen', prodi: 'Tekonologi Pangan', password: pass, photo: null };
-                    sessionStorage.setItem('active_user', JSON.stringify(currentUser));
-                    sessionStorage.setItem('login_timestamp', Date.now().toString());
-                    
-                    const isDefault = currentUser.role !== 'Admin' && String(currentUser.password).trim() === String(currentUser.nip).trim();
-                    if (isDefault) routeView('Profile');
-                    else routeView(currentUser.role === 'Admin' ? 'Admin' : 'User');
-                }, 800);
+                fetchServer('apiLogin', { nip: nip, pass: pass })
+                    .then(user => {
+                        hideLoader();
+                        if (user) {
+                            currentUser = user; currentUser.password = pass; 
+                            sessionStorage.setItem('active_user', JSON.stringify(currentUser));
+                            sessionStorage.setItem('login_timestamp', Date.now().toString());
+                            
+                            const isDefault = currentUser.role !== 'Admin' && String(currentUser.password).trim() === String(currentUser.nip).trim();
+                            if (isDefault) routeView('Profile');
+                            else routeView(user.role === 'Admin' ? 'Admin' : 'User');
+                        } else Swal.fire('Error', 'Username/password salah', 'error');
+                    })
+                    .catch(err => {
+                        hideLoader();
+                        Swal.fire('Koneksi Gagal', err.message, 'error');
+                    });
             }
         }
 
@@ -758,12 +713,13 @@
             }
 
             // Tampilkan view yang dituju
-            if (view === 'Login') { 
-                $('#viewLogin').addClass('active'); 
-                $('#inputNip, #inputPass').val(''); 
-            } else if (view === 'User') {
-                $('#viewUser').addClass('active');
-            } else if (view === 'Rekap') {
+        if (view === 'Login') { 
+            $('#viewLogin').addClass('active'); 
+            $('#inputNip, #inputPass').val(''); 
+            $('#bottomNav').removeClass('visible');
+        } else if (view === 'User') {
+            $('#viewUser').addClass('active');
+        } else if (view === 'Rekap') {
                 $('#viewUserRekap').addClass('active');
             } else if (view === 'Profile') {
                 $('#viewProfile').addClass('active');
@@ -787,8 +743,19 @@
         }
 
         function loadDataForUser() {
-            if (isGAS) google.script.run.withSuccessHandler((logs) => { allLogsGlobal = logs; renderUserRekap(logs); }).apiGetLogs();
-            else { allLogsGlobal = [{tanggal: '04/05/2026', nip: currentUser.nip, jamMasuk: '08:00', jamPulang: ''}]; renderUserRekap(allLogsGlobal); }
+            if (isGAS) {
+                google.script.run.withSuccessHandler((logs) => { allLogsGlobal = logs || []; renderUserRekap(allLogsGlobal); }).apiGetLogs();
+            } else { 
+                fetchServer('apiGetLogs', {})
+                    .then(logs => {
+                        allLogsGlobal = logs || [];
+                        renderUserRekap(allLogsGlobal);
+                    })
+                    .catch(err => {
+                        console.error("Gagal memuat log:", err);
+                        renderUserRekap([]); // Kosongkan jika gagal
+                    });
+            }
         }
 
         function renderUserRekap(logs) {
@@ -796,6 +763,7 @@
             const tbody = $('#userLogsTable tbody').empty();
             let count = 0;
             logs.forEach(log => {
+                if (!log || !log.tanggal) return;
                 const p = log.tanggal.split('/');
                 if (log.nip === currentUser.nip && parseInt(p[1]) === tM && parseInt(p[2]) === tY) {
                     count++;
@@ -808,7 +776,13 @@
         }
 
         function logout(isAuto = false) { 
-            const perform = () => { sessionStorage.removeItem('active_user'); sessionStorage.removeItem('login_timestamp'); if (gpsWatcher) navigator.geolocation.clearWatch(gpsWatcher); routeView('Login'); };
+            const perform = () => { 
+                sessionStorage.removeItem('active_user'); 
+                sessionStorage.removeItem('login_timestamp'); 
+                if (gpsWatcher) navigator.geolocation.clearWatch(gpsWatcher); 
+                currentUser = null;
+                routeView('Login'); 
+            };
             if (isAuto) { perform(); Swal.fire('Sesi Habis', 'Silakan login kembali', 'info'); return; }
             Swal.fire({ title: 'Keluar?', icon: 'warning', showCancelButton: true }).then(r => { if(r.isConfirmed) perform(); });
         }
@@ -868,7 +842,9 @@
                     '<i class="fas fa-check-circle d-block mb-1"></i> PULANG' : 
                     '<i class="fas fa-sign-out-alt d-block mb-1"></i> PULANG');
 
-            }, null, { enableHighAccuracy: true });
+            }, (err) => {
+                console.warn("GPS Error:", err);
+            }, { enableHighAccuracy: true });
         }
 
         function doAbsen(type) {
@@ -882,16 +858,41 @@
                             hideLoader(); Swal.fire('Berhasil', '', 'success');
                             if (type === 'Masuk') currentUser.hasMasuk = true; else currentUser.hasPulang = true;
                             sessionStorage.setItem('active_user', JSON.stringify(currentUser)); loadDataForUser();
+                        }).withFailureHandler((err) => {
+                            hideLoader(); Swal.fire('Gagal Absen', err.message, 'error');
                         }).apiSubmit(p);
-                    } else { hideLoader(); Swal.fire('Simulasi', 'Berhasil', 'success'); }
+                    } else { 
+                        fetchServer('apiSubmit', p)
+                            .then(() => {
+                                hideLoader(); Swal.fire('Berhasil', '', 'success');
+                                if (type === 'Masuk') currentUser.hasMasuk = true; else currentUser.hasPulang = true;
+                                sessionStorage.setItem('active_user', JSON.stringify(currentUser)); 
+                                loadDataForUser();
+                            })
+                            .catch(err => {
+                                hideLoader(); Swal.fire('Gagal Absen', err.message, 'error');
+                            });
+                    }
                 }
             });
         }
 
         function loadAdminData() {
             showLoader('Memuat...');
-            if (isGAS) google.script.run.withSuccessHandler(logs => { hideLoader(); allLogsGlobal = logs; renderAdminViews(logs); }).apiGetLogs();
-            else { hideLoader(); renderAdminViews([]); }
+            if (isGAS) {
+                google.script.run.withSuccessHandler(logs => { hideLoader(); allLogsGlobal = logs || []; renderAdminViews(allLogsGlobal); }).apiGetLogs();
+            } else { 
+                fetchServer('apiGetLogs', {})
+                    .then(logs => {
+                        hideLoader();
+                        allLogsGlobal = logs || [];
+                        renderAdminViews(allLogsGlobal);
+                    })
+                    .catch(err => {
+                        hideLoader();
+                        Swal.fire('Koneksi Gagal', err.message, 'error');
+                    });
+            }
         }
 
         function renderAdminViews(logs) {
@@ -899,6 +900,7 @@
             const rM = parseInt($('#rekapMonth').val()), rY = parseInt($('#rekapYear').val());
             let stats = {}, cD = 0, cT = 0, cK = 0;
             logs.forEach(log => {
+                if(!log || !log.tanggal) return;
                 const p = log.tanggal.split('/');
                 if(log.jamMasuk && parseInt(p[1]) === dM && parseInt(p[2]) === dY) {
                     const r = (log.role || "").toLowerCase();
@@ -915,6 +917,7 @@
             if (dataTableInstance) dataTableInstance.destroy();
             const tbody = $('#adminTable tbody').empty();
             logs.slice().reverse().forEach(log => {
+                if(!log || !log.tanggal) return;
                 const p = log.tanggal.split('/');
                 if (parseInt(p[1]) === rM && parseInt(p[2]) === rY) {
                     const ket = isWeekend(log.tanggal) ? '<span class="badge bg-warning text-dark">Lembur</span>' : '<span class="badge bg-info text-white">Hadir</span>';
@@ -933,7 +936,47 @@
             XLSX.writeFile(XLSX.utils.book_append_sheet(XLSX.utils.book_new(), XLSX.utils.aoa_to_sheet(tableData), "Rekap"), "Laporan_Presensi.xlsx");
         }
 
-        function saveConfig() { campusConfig = { lat: parseFloat($('#cfgLat').val()), lng: parseFloat($('#cfgLng').val()), radius: parseInt($('#cfgRad').val()) }; localStorage.setItem('campus_cfg', JSON.stringify(campusConfig)); Swal.fire('Tersimpan', '', 'success'); }
+        function saveConfig() { 
+            const newConfig = { 
+                lat: parseFloat($('#cfgLat').val()), 
+                lng: parseFloat($('#cfgLng').val()), 
+                radius: parseInt($('#cfgRad').val()) 
+            }; 
+            
+            showLoader('Menyimpan ke Server...');
+            
+            if (isGAS) {
+                google.script.run.withSuccessHandler(res => {
+                    hideLoader();
+                    if(res.success) {
+                        campusConfig = newConfig;
+                        localStorage.setItem('campus_cfg', JSON.stringify(campusConfig)); 
+                        Swal.fire('Tersimpan', 'Koordinat kampus berhasil diupdate ke server.', 'success');
+                        initGeofence(); // Restart GPS dengan pengaturan baru
+                    } else {
+                        Swal.fire('Gagal', res.message, 'error');
+                    }
+                }).apiSaveConfig(newConfig);
+            } else {
+                fetchServer('apiSaveConfig', newConfig)
+                    .then(res => {
+                        hideLoader();
+                        if(res.success) {
+                            campusConfig = newConfig;
+                            localStorage.setItem('campus_cfg', JSON.stringify(campusConfig)); 
+                            Swal.fire('Tersimpan', 'Koordinat kampus berhasil diupdate ke server.', 'success');
+                            initGeofence();
+                        } else {
+                            Swal.fire('Gagal', 'Terjadi kesalahan sistem', 'error');
+                        }
+                    })
+                    .catch(err => {
+                        hideLoader();
+                        Swal.fire('Koneksi Gagal', err.message, 'error');
+                    });
+            }
+        }
+
         function showLoader(txt) { $('#loaderText').text(txt); $('#loader').css('display', 'flex'); }
         function hideLoader() { $('#loader').hide(); }
         function switchAdminSubView(sub, el) { $('.admin-sub-view').addClass('d-none'); $('.sidebar-link').removeClass('active'); $(el).addClass('active'); if (sub === 'dash') $('#subViewDash').removeClass('d-none'); else if (sub === 'rekap') $('#subViewRekap').removeClass('d-none'); else if (sub === 'setting') { $('#subViewSetting').removeClass('d-none'); $('#cfgLat').val(campusConfig.lat); $('#cfgLng').val(campusConfig.lng); $('#cfgRad').val(campusConfig.radius); } }
@@ -952,14 +995,38 @@
                         Swal.fire('Berhasil', 'Password diperbarui', 'success'); 
                         routeView('User');
                     } else Swal.fire('Gagal', res.message, 'error');
+                }).withFailureHandler((err) => {
+                    hideLoader(); Swal.fire('Gagal', err.message, 'error');
                 }).apiChangePassword(currentUser.nip, newP);
             } else { 
-                hideLoader(); 
-                currentUser.password = newP; 
-                sessionStorage.setItem('active_user', JSON.stringify(currentUser)); 
-                Swal.fire('Simulasi', 'Berhasil', 'success'); 
-                routeView('User');
+                fetchServer('apiChangePassword', { nip: currentUser.nip, newPass: newP })
+                    .then(res => {
+                        hideLoader();
+                        if (res.success) {
+                            currentUser.password = newP; 
+                            sessionStorage.setItem('active_user', JSON.stringify(currentUser)); 
+                            Swal.fire('Berhasil', 'Password diperbarui', 'success'); 
+                            routeView('User');
+                        } else Swal.fire('Gagal', res.message, 'error');
+                    })
+                    .catch(err => {
+                        hideLoader();
+                        Swal.fire('Koneksi Gagal', err.message, 'error');
+                    });
             }
+        }
+
+        // Update fungsi pengambilan lokasi Anda
+        function getLocation() {
+          const options = {
+            enableHighAccuracy: true, // WAJIB: Memaksa HP menggunakan satelit GPS
+            timeout: 10000,           // Memberi waktu 10 detik untuk mengunci satelit
+            maximumAge: 0             // Jangan gunakan data lokasi lama (cache)
+          };
+
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(successCallback, errorCallback, options);
+          }
         }
     </script>
 </body>
