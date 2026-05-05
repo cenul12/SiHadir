@@ -125,7 +125,7 @@
     <div id="viewLogin" class="view-section active">
         <div class="app-header text-center">
             <h4 class="mb-0 fw-bold"><i class="fas fa-fingerprint me-2"></i>SiHadir LIT</h4>
-            <p class="mb-0 mt-1 text-white-50 small">Sistem Presensi LIT</p>
+            <p class="mb-0 mt-1 text-white-50 small">Sistem Presensi Kampus LIT</p>
         </div>
         <div class="container main-content">
             <div class="glass-card p-4 text-center mx-auto shadow-lg" style="max-width: 400px; height: auto;">
@@ -144,7 +144,7 @@
                         <input type="password" class="form-control border-0 bg-light rounded-4" id="inputPass" placeholder="Password" required>
                         <label class="text-muted">Password</label>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 btn-action shadow-lg">MASUK <i class="fas fa-sign-in-alt ms-2"></i></button>
+                    <button type="submit" class="btn btn-primary w-100 btn-action shadow-lg">MASUK<i class="fas fa-sign-in-alt ms-2"></i></button>
                 </form>
             </div>
         </div>
@@ -352,7 +352,7 @@
                 </div>
                 <div class="d-flex flex-column align-items-center justify-content-center mt-5">
                     <button class="btn btn-outline-danger rounded-pill fw-bold py-2 px-5 shadow-sm border-2 transition-all" onclick="logout()">
-                        <i class="fas fa-power-off me-2"></i> KELUAR
+                        <i class="fas fa-power-off me-2"></i> KELUAR DARI SISTEM
                     </button>
                     <p class="text-muted mt-3 small opacity-50 fw-semibold">SiHadir LIT v1.4</p>
                 </div>
@@ -451,7 +451,7 @@
         // =====================================================================
         // URL API ANDA (Wajib diisi jika hosting di Netlify / Luar GAS)
         // =====================================================================
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzR-Hdt8yJmk_p0f-uG10c5PYo3TM2_z3cLJU06ZI7iBb37iaevDvazeWqDRnc1w_4B/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxRI0IOyewvQa5ggNzDQ7HqOHe_EEWQPTMClYLCFMhq2iDLOXgB3ul-jlaGvC8yn8L7/exec";
 
         let campusConfig = JSON.parse(localStorage.getItem('campus_cfg')) || { lat: -6.2, lng: 106.8, radius: 200 };
         let currentUser = null;
@@ -1005,15 +1005,22 @@
                     const ket = isWeekend(log.tanggal) ? '<span class="badge bg-warning text-dark">Lembur</span>' : '<span class="badge bg-info text-white">Hadir</span>';
                     
                     // --- BAGIAN YANG DIPERBAIKI ---
-                    // Mengambil data dari kolom "LOKASI MASUK" atau "LOKASI PULANG" di Spreadsheet
-                    let gpsButton = '-';
-                    const coord = log.lokasiMasuk || log['LOKASI MASUK'] || log.lokasiPulang || log['LOKASI PULANG'] || log.lokasi || log.gps;
+                    // Menggabungkan Tombol Peta Masuk dan Peta Pulang dalam satu kolom
+                    let gpsButtons = '';
                     
-                    if (coord) {
-                        gpsButton = `<a href="https://maps.google.com/?q=${coord}" target="_blank" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1" style="font-size: 0.75rem;"><i class="fas fa-map-marker-alt me-1"></i> Peta</a>`;
+                    const coordMasuk = log.lokasiMasuk || log['LOKASI MASUK'];
+                    const coordPulang = log.lokasiPulang || log['LOKASI PULANG'];
+                    
+                    if (coordMasuk) {
+                        gpsButtons += `<a href="https://maps.google.com/?q=${coordMasuk}" target="_blank" class="btn btn-sm btn-outline-success rounded-pill px-2 py-1" style="font-size: 0.7rem;"><i class="fas fa-map-marker-alt me-1"></i> Masuk</a>`;
+                    }
+                    if (coordPulang) {
+                        gpsButtons += `<a href="https://maps.google.com/?q=${coordPulang}" target="_blank" class="btn btn-sm btn-outline-danger rounded-pill px-2 py-1" style="font-size: 0.7rem;"><i class="fas fa-map-marker-alt me-1"></i> Pulang</a>`;
                     }
                     
-                    tbody.append(`<tr><td>${log.tanggal}</td><td><code>${log.nip}</code></td><td class="text-start">${log.nama}</td><td>${log.prodi}</td><td>${log.jamMasuk || '-'}</td><td>${log.jamPulang || '-'}</td><td>${ket}</td><td>${gpsButton}</td></tr>`);
+                    if (!gpsButtons) gpsButtons = '-';
+                    
+                    tbody.append(`<tr><td>${log.tanggal}</td><td><code>${log.nip}</code></td><td class="text-start">${log.nama}</td><td>${log.prodi}</td><td>${log.jamMasuk || '-'}</td><td>${log.jamPulang || '-'}</td><td>${ket}</td><td><div class="d-flex justify-content-center gap-1">${gpsButtons}</div></td></tr>`);
                     // ------------------------------
                 }
             });
@@ -1021,10 +1028,20 @@
         }
 
         function exportToExcel() {
+            // Header Excel Diperbarui (kembali tanpa GPS)
             const tableData = [['Laporan Presensi Bulanan'], ['Tanggal', 'NIP', 'Nama', 'Prodi', 'Masuk', 'Pulang', 'Keterangan']];
+
             dataTableInstance.rows({search:'applied'}).every(function() {
                 const d = this.data();
-                tableData.push([d[0], d[1].replace(/<[^>]*>/g, ''), d[2], d[3], d[4], d[5], d[6].includes('Lembur') ? 'Lembur' : 'Hadir']);
+                tableData.push([
+                    d[0], 
+                    d[1].replace(/<[^>]*>/g, ''), 
+                    d[2], 
+                    d[3], 
+                    d[4], 
+                    d[5], 
+                    d[6].includes('Lembur') ? 'Lembur' : 'Hadir'
+                ]);
             });
             XLSX.writeFile(XLSX.utils.book_append_sheet(XLSX.utils.book_new(), XLSX.utils.aoa_to_sheet(tableData), "Rekap"), "Laporan_Presensi.xlsx");
         }
